@@ -1,5 +1,5 @@
 ## Build UI
-FROM node:20-alpine as ui
+FROM --platform=linux/amd64 node:20-alpine as ui
 
 WORKDIR /usr/src/ui
 
@@ -21,12 +21,12 @@ RUN npm prune --production
 #RUN /usr/local/bin/node-prune
 
 ## Build API
-FROM node:20-alpine as api
+FROM --platform=linux/amd64 node:20-alpine as api
 LABEL maintainer="OhMyForm <admin@ohmyform.com>"
 
 WORKDIR /usr/src/api
 
-RUN apk --update --no-cache add curl bash g++ make libpng-dev python3
+RUN apk --update --no-cache add curl bash g++ make libpng-dev python3 py3-setuptools
 
 # install node-prune (https://github.com/tj/node-prune)
 RUN curl -sf https://gobinaries.com/tj/node-prune | sh
@@ -45,9 +45,10 @@ RUN npm prune --production
 RUN /usr/local/bin/node-prune
 
 ## Production Image.
-FROM node:20-alpine
+FROM --platform=linux/amd64 node:20-alpine
 
 RUN apk --update add supervisor nginx && rm -rf /var/cache/apk/*
+RUN apk --update --no-cache add curl bash g++ make libpng-dev python3 py3-setuptools
 
 WORKDIR /usr/src
 
