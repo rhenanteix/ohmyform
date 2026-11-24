@@ -5,7 +5,6 @@ import { AuthLayout } from 'components/auth/layout'
 import { setAuth } from 'components/with.auth'
 import { RegisterUserData, useRegisterMutation } from 'graphql/mutation/register.mutation'
 import { NextPage } from 'next'
-import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -116,7 +115,7 @@ const Register: NextPage = () => {
         </Form.Item>
 
         <Button.Group className={scss.otherActions}>
-          <Link href={'/login'}>
+          <a href={'/login'}>
             <Button
               type={'link'}
               ghost
@@ -126,7 +125,7 @@ const Register: NextPage = () => {
             >
               {t('register:gotoLogin')}
             </Button>
-          </Link>
+          </a>
         </Button.Group>
       </Form>
 

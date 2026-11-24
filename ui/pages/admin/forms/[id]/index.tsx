@@ -12,7 +12,6 @@ import { withAuth } from 'components/with.auth'
 import debug from 'debug'
 import { useFormUpdateMutation } from 'graphql/mutation/form.update.mutation'
 import { NextPage } from 'next'
-import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -150,13 +149,12 @@ const Index: NextPage = () => {
         { href: '/admin/forms', name: t('admin:forms') },
       ]}
       extra={[
-        <Link
+        <a
           key={'submissions'}
-          href={'/admin/forms/[id]/submissions'}
-          as={`/admin/forms/${router.query.id as string}/submissions`}
+          href={`/admin/forms/${router.query.id as string}/submissions`}
         >
           <Button>{t('admin:submissions')}</Button>
-        </Link>,
+        </a>,
         <Button key={'save'} onClick={form.submit} type={'primary'}>
           {t('form:updateNow')}
         </Button>,

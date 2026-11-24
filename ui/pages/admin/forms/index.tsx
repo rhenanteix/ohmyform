@@ -4,23 +4,106 @@ import {
   GlobalOutlined,
   UnorderedListOutlined,
   WarningOutlined,
-} from '@ant-design/icons/lib'
+} from '@ant-design/icons'
 import { Button, message, Popconfirm, Space, Table, Tag, Tooltip } from 'antd'
 import { PaginationProps } from 'antd/es/pagination'
 import { ColumnsType } from 'antd/lib/table/interface'
 import { DateTime } from 'components/date.time'
-import { FormIsLive } from 'components/form/admin/is.live'
-import Structure from 'components/structure'
 import { TimeAgo } from 'components/time.ago'
 import { withAuth } from 'components/with.auth'
 import { NextPage } from 'next'
-import Link from 'next/link'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useWindowSize } from '../../../components/use.window.size'
 import { FormPagerFragment } from '../../../graphql/fragment/form.pager.fragment'
 import { useFormDeleteMutation } from '../../../graphql/mutation/form.delete.mutation'
 import { useFormPagerQuery } from '../../../graphql/query/form.pager.query'
+import styled from 'styled-components'
+
+const FormContainer = styled.div`
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
+  position: relative;
+`
+
+const HeaderBar = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 16px;
+`
+
+const HeaderTitle = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+`
+
+const HeaderTitleText = styled.h2`
+  font-size: 22px;
+  font-weight: 900;
+  color: #0f172a;
+  margin: 0;
+`
+
+const HeaderDesc = styled.span`
+  font-size: 13px;
+  color: #64748b;
+  margin-left: 4px;
+`
+
+const ActionsGroup = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 12px;
+`
+
+const TableWrapper = styled.div`
+  background: #fff;
+  border-radius: 16px;
+  border: 1px solid var(--omf-border);
+  box-shadow: var(--omf-shadow-sm);
+  overflow: hidden;
+`
+
+const EmptyState = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 24px;
+  text-align: center;
+  color: #64748b;
+`
+
+const EmptyIcon = styled.div`
+  width: 64px;
+  height: 64px;
+  border-radius: 16px;
+  background: #f1f5f9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  color: #8B5CF6;
+  margin-bottom: 16px;
+`
+
+const EmptyTitle = styled.h3`
+  font-size: 18px;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0 0 8px;
+`
+
+const EmptyDesc = styled.p`
+  font-size: 14px;
+  color: #64748b;
+  margin: 0 0 24px;
+`
 
 const Index: NextPage = () => {
   const { t } = useTranslation()
@@ -29,7 +112,7 @@ const Index: NextPage = () => {
     pageSize: 25,
   })
   const [entries, setEntries] = useState<FormPagerFragment[]>()
-  const { loading, refetch, error } = useFormPagerQuery({
+  const { loading, refetch } = useFormPagerQuery({
     variables: {
       limit: pagination.pageSize,
       start: Math.max(0, pagination.current - 1) * pagination.pageSize || 0,
@@ -69,27 +152,41 @@ const Index: NextPage = () => {
       title: t('form:row.isLive'),
       dataIndex: 'isLive',
       render(live: boolean) {
-        return <FormIsLive isLive={live} />
+        return (
+          <Tag color={live ? 'green' : 'default'} style={{ fontWeight: 700 }}>
+            {live ? t('form:row.isLive') : 'Rascunho'}
+          </Tag>
+        )
       },
       responsive: ['md'],
     },
     {
       title: t('form:row.title'),
       dataIndex: 'title',
+      render(text: string, record: FormPagerFragment) {
+        return (
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <div style={{ width: 40, height: 40, borderRadius: 10, background: '#f0f9ff', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#8B5CF6', fontWeight: 900 }}>
+              {record.title.charAt(0).toUpperCase()}
+            </div>
+            <span style={{ fontWeight: 700, color: '#0f172a' }}>{text}</span>
+          </div>
+        )
+      },
     },
     {
       title: t('form:row.admin'),
       dataIndex: 'admin',
       render(_, { admin: user }) {
         if (!user) {
-          return <Tag color={'red'} title={t('form:row.adminMissing')} />
+          return <Tag color={'default'} title={t('form:row.adminMissing')}>{t('form:row.adminMissing')}</Tag>
         }
 
         return (
           <Tooltip title={user.email}>
-            <Link href={`/admin/users/${user.id}`} passHref>
-              <Button type={'dashed'}>{user.username}</Button>
-            </Link>
+            <a href={`/admin/users/${user.id}`} style={{ textDecoration: 'none', color: '#8B5CF6', fontWeight: 700 }}>
+              {user.username}
+            </a>
           </Tooltip>
         )
       },
@@ -99,7 +196,11 @@ const Index: NextPage = () => {
       title: t('form:row.language'),
       dataIndex: 'language',
       render(lang: string) {
-        return t(`language:${lang}`)
+        return (
+          <Tag color='default' style={{ fontSize: 12 }}>
+            {t(`language:${lang}`)}
+          </Tag>
+        )
       },
       responsive: ['lg'],
     },
@@ -124,20 +225,20 @@ const Index: NextPage = () => {
       align: 'right',
       render(_, row) {
         return (
-          <Space direction={width < 600 ? 'vertical' : 'horizontal'}>
-            <Tooltip title={'Show Submissions'}>
-              <Link href={`/admin/forms/${row.id}/submissions`} passHref>
-                <Button>
-                  <UnorderedListOutlined />
-                </Button>
-              </Link>
+          <Space direction={width < 600 ? 'vertical' : 'horizontal'} style={{ gap: 8 }}>
+            <Tooltip title={'Ver respostas'}>
+              <a href={`/admin/forms/${row.id}/submissions`}>
+                <a href={`/admin/forms/${row.id}/submissions`} style={{ textDecoration: 'none' }}>
+                  <Button ghost icon={<UnorderedListOutlined />} />
+                </a>
+              </a>
             </Tooltip>
 
-            <Link href={`/admin/forms/${row.id}`} passHref>
-              <Button type={'primary'}>
-                <EditOutlined />
-              </Button>
-            </Link>
+            <a href={`/admin/forms/${row.id}`}>
+              <a href={`/admin/forms/${row.id}`} style={{ textDecoration: 'none' }}>
+                <Button type='primary' icon={<EditOutlined />} />
+              </a>
+            </a>
 
             <Popconfirm
               title={t('form:confirmDelete')}
@@ -145,25 +246,22 @@ const Index: NextPage = () => {
               okText={t('form:deleteNow')}
               okButtonProps={{ danger: true }}
             >
-              <Button danger>
-                <DeleteOutlined />
-              </Button>
+              <Button danger icon={<DeleteOutlined />} />
             </Popconfirm>
 
             {row.isLive && (
-              <Button href={`/form/${row.id}`} target={'_blank'}>
-                <GlobalOutlined />
-              </Button>
+              <a href={`/form/${row.id}`} target={'_blank'} rel={'noreferrer'} style={{ textDecoration: 'none' }}>
+                <Button ghost icon={<GlobalOutlined />} />
+              </a>
             )}
 
             {!row.isLive && (
-              <Tooltip title={'Not Public accessible!'} placement={'left'}>
-                <Button href={`/form/${row.id}`} target={'_blank'}>
-                  <WarningOutlined />
-                </Button>
+              <Tooltip title={'Não acessível publicamente!'} placement={'left'}>
+                <a href={`/form/${row.id}`} target={'_blank'} rel={'noreferrer'} style={{ textDecoration: 'none' }}>
+                  <Button ghost icon={<WarningOutlined />} />
+                </a>
               </Tooltip>
             )}
-
 
           </Space>
         )
@@ -171,31 +269,68 @@ const Index: NextPage = () => {
     },
   ]
 
+  if (!entries || entries.length === 0) {
+    return (
+      <FormContainer>
+        <HeaderBar>
+          <HeaderTitle>
+            <EmptyIcon>📝</EmptyIcon>
+            <div>
+              <HeaderTitleText>{t('admin:forms')}</HeaderTitleText>
+              <HeaderDesc>
+                Crie seu primeiro formulário para começar a coletar respostas.
+              </HeaderDesc>
+            </div>
+          </HeaderTitle>
+          <ActionsGroup>
+            <a href={'/admin/forms/create'}>
+              <Button type={'primary'}>{t('form:new')}</Button>
+            </a>
+          </ActionsGroup>
+        </HeaderBar>
+        <EmptyState>
+          <EmptyIcon>📭</EmptyIcon>
+          <EmptyTitle>Nenhum formulário ainda</EmptyTitle>
+          <EmptyDesc>Comece criando seu primeiro formulário. É rápido e fácil.</EmptyDesc>
+          <a href={'/admin/forms/create'}>
+            <Button type={'primary'}>{t('form:createNow')}</Button>
+          </a>
+        </EmptyState>
+      </FormContainer>
+    )
+  }
+
   return (
-    <Structure
-      title={t('admin:forms')}
-      selected={'forms'}
-      loading={loading}
-      breadcrumbs={[{ href: '/admin', name: t('admin:home') }]}
-      padded={false}
-      extra={[
-        <Link key={'create'} href={'/admin/forms/create'}>
-          <Button type={'primary'}>{t('form:new')}</Button>
-        </Link>,
-      ]}
-      error={error?.message}
-    >
-      <Table
-        columns={columns}
-        dataSource={entries}
-        rowKey={'id'}
-        pagination={pagination}
-        onChange={async (next) => {
-          setPagination(next)
-          await refetch()
-        }}
-      />
-    </Structure>
+    <FormContainer>
+      <HeaderBar>
+        <HeaderTitle>
+          <EmptyIcon>📝</EmptyIcon>
+          <div>
+            <HeaderTitleText>{t('admin:forms')}</HeaderTitleText>
+            <HeaderDesc>Gerencie todos os seus formulários em um só lugar.</HeaderDesc>
+          </div>
+        </HeaderTitle>
+        <ActionsGroup>
+          <a href={'/admin/forms/create'}>
+            <Button type={'primary'}>{t('form:new')}</Button>
+          </a>
+        </ActionsGroup>
+      </HeaderBar>
+      <TableWrapper>
+        <Table
+          columns={columns}
+          dataSource={entries}
+          rowKey={'id'}
+          pagination={pagination}
+          onChange={async (next) => {
+            setPagination(next)
+            await refetch()
+          }}
+          size={'middle'}
+          rowClassName={() => 'ant-table-row'}
+        />
+      </TableWrapper>
+    </FormContainer>
   )
 }
 

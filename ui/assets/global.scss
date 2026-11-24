@@ -4,6 +4,24 @@
 @import "../node_modules/leaflet/dist/leaflet.css";
 
 :root {
+  --omf-primary: #{$omf-primary};
+  --omf-primary-2: #{$omf-primary-2};
+  --omf-primary-3: #{$omf-primary-3};
+  --omf-success: #{$omf-success};
+  --omf-warning: #{$omf-warning};
+  --omf-danger: #{$omf-danger};
+  --omf-info: #{$omf-info};
+  --omf-bg: #{$omf-bg};
+  --omf-bg-secondary: #{$omf-bg-secondary};
+  --omf-card: #{$omf-card};
+  --omf-text: #{$omf-text};
+  --omf-text-muted: #{$omf-text-muted};
+  --omf-border: #{$omf-border};
+  --omf-radius: #{$omf-radius};
+  --omf-radius-sm: #{$omf-radius-sm};
+  --omf-shadow: #{$omf-shadow};
+  --omf-transition: #{$omf-transition};
+
   --backgroundColor: #{$background-color};
   --primaryColor: #{$primary-color};
   --textColorSecondary: #{$text-color-secondary};
@@ -13,16 +31,38 @@
   --amplify-primary-shade: #{$primary-color};
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--omf-bg);
+  color: var(--omf-text);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  margin: 0;
+}
+
+.omf-gradient {
+  background: var(--omf-gradient);
+}
+
+.omf-gradient-text {
+  background: var(--omf-gradient-text);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
 .sidebar-toggle {
   font-size: 18px;
   line-height: 64px;
   padding: 0 24px;
   cursor: pointer;
-  transition: color 0.3s;
+  transition: var(--omf-transition);
   color: #FFF;
 
   &:hover {
-    color: #1890ff;
+    color: #8B5CF6;
   }
 }
 
@@ -56,3 +96,73 @@
     }
   }
 }
+
+.ant-btn-primary {
+  background: var(--omf-gradient) !important;
+  border: none !important;
+  box-shadow: 0 4px 14px 0 rgba(139, 92, 246, 0.35);
+  transition: var(--omf-transition);
+  &:hover:not(:disabled) {
+    filter: brightness(1.05);
+    box-shadow: 0 6px 20px 0 rgba(139, 92, 246, 0.45);
+    transform: translateY(-1px);
+  }
+  &:active:not(:disabled) {
+    transform: translateY(0);
+  }
+}
+
+.ant-input,
+.ant-select-selector {
+  border: 1px solid var(--omf-border) !important;
+  border-radius: 10px !important;
+  transition: var(--omf-transition);
+  &:focus,
+  &:focus-within {
+    border-color: #8B5CF6 !important;
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.15) !important;
+  }
+}
+
+.ant-switch {
+  &.ant-switch-checked {
+    background-color: #8B5CF6 !important;
+    & + span {
+      background-color: #8B5CF6 !important;
+    }
+  }
+}
+
+.ant-statistic-content {
+  color: #0f172a !important;
+  font-weight: 800;
+}
+
+.ant-card {
+  border-radius: 16px !important;
+  border: 1px solid var(--omf-border) !important;
+  box-shadow: var(--omf-shadow) !important;
+  transition: var(--omf-transition);
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 20px 40px -10px rgba(0,0,0,0.1);
+  }
+}
+
+.ant-table-thead > tr > th {
+  background: #f8fafc !important;
+  color: #64748b !important;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  border-bottom: 1px solid var(--omf-border) !important;
+}
+.ant-table-tbody > tr > td {
+  border-bottom: 1px solid #f1f5f9 !important;
+  transition: var(--omf-transition);
+}
+.ant-table-tbody > tr:hover > td {
+  background: #faf5ff !important;
+}
+

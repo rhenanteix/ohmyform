@@ -1,11 +1,9 @@
-import { DeleteOutlined, EditOutlined } from '@ant-design/icons/lib'
+import { DeleteOutlined, EditOutlined } from '@ant-design/icons'
 import { Button, message, Popconfirm, Space, Table, Tag } from 'antd'
 import { PaginationProps } from 'antd/es/pagination'
 import { ColumnsType } from 'antd/lib/table/interface'
-import Structure from 'components/structure'
 import { withAuth } from 'components/with.auth'
 import { NextPage } from 'next'
-import Link from 'next/link'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { DateTime } from '../../../components/date.time'
@@ -14,6 +12,86 @@ import { UserRole } from '../../../components/user/role'
 import { UserPagerFragment } from '../../../graphql/fragment/user.pager.fragment'
 import { useUserDeleteMutation } from '../../../graphql/mutation/user.delete.mutation'
 import { useUserPagerQuery } from '../../../graphql/query/user.pager.query'
+import styled from 'styled-components'
+
+const UserContainer = styled.div`
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
+  position: relative;
+`
+
+const HeaderBar = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 16px;
+`
+
+const HeaderTitle = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+`
+
+const HeaderTitleText = styled.h2`
+  font-size: 22px;
+  font-weight: 900;
+  color: #0f172a;
+  margin: 0;
+`
+
+const HeaderDesc = styled.span`
+  font-size: 13px;
+  color: #64748b;
+  margin-left: 4px;
+`
+
+const TableWrapper = styled.div`
+  background: #fff;
+  border-radius: 16px;
+  border: 1px solid var(--omf-border);
+  box-shadow: var(--omf-shadow-sm);
+  overflow: hidden;
+`
+
+const EmptyState = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 24px;
+  text-align: center;
+  color: #64748b;
+`
+
+const EmptyIcon = styled.div`
+  width: 64px;
+  height: 64px;
+  border-radius: 16px;
+  background: #f1f5f9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  color: #8B5CF6;
+  margin-bottom: 16px;
+`
+
+const EmptyTitle = styled.h3`
+  font-size: 18px;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0 0 8px;
+`
+
+const EmptyDesc = styled.p`
+  font-size: 14px;
+  color: #64748b;
+  margin: 0;
+`
 
 const Index: NextPage = () => {
   const { width } = useWindowSize()
@@ -22,7 +100,7 @@ const Index: NextPage = () => {
     pageSize: 10,
   })
   const [entries, setEntries] = useState<UserPagerFragment[]>()
-  const { loading, refetch, error } = useUserPagerQuery({
+  const { loading, refetch } = useUserPagerQuery({
     variables: {
       limit: pagination.pageSize,
       start: Math.max(0, pagination.current - 1) * pagination.pageSize || 0,
@@ -68,7 +146,11 @@ const Index: NextPage = () => {
     {
       title: t('user:row.email'),
       render(_, row) {
-        return <Tag color={row.verifiedEmail ? 'lime' : 'volcano'}>{row.email}</Tag>
+        return (
+          <Tag color={row.verifiedEmail ? 'green' : 'default'} style={{ fontWeight: 700 }}>
+            {row.email}
+          </Tag>
+        )
       },
     },
     {
@@ -84,12 +166,10 @@ const Index: NextPage = () => {
       align: 'right',
       render(_, row) {
         return (
-          <Space direction={width < 600 ? 'vertical' : 'horizontal'}>
-            <Link href={`/admin/users/${row.id}`} passHref>
-              <Button type={'primary'}>
-                <EditOutlined />
-              </Button>
-            </Link>
+          <Space direction={width < 600 ? 'vertical' : 'horizontal'} style={{ gap: 8 }}>
+            <a href={`/admin/users/${row.id}`} style={{ textDecoration: 'none' }}>
+              <Button type='primary' icon={<EditOutlined />} />
+            </a>
 
             <Popconfirm
               title={t('user:confirmDelete')}
@@ -97,9 +177,7 @@ const Index: NextPage = () => {
               okText={t('user:deleteNow')}
               okButtonProps={{ danger: true }}
             >
-              <Button danger>
-                <DeleteOutlined />
-              </Button>
+              <Button danger icon={<DeleteOutlined />} />
             </Popconfirm>
           </Space>
         )
@@ -107,25 +185,52 @@ const Index: NextPage = () => {
     },
   ]
 
+  if (!entries || entries.length === 0) {
+    return (
+      <UserContainer>
+        <HeaderBar>
+          <HeaderTitle>
+            <EmptyIcon>👥</EmptyIcon>
+            <div>
+              <HeaderTitleText>{t('admin:users')}</HeaderTitleText>
+              <HeaderDesc>Gerencie os usuários da sua plataforma.</HeaderDesc>
+            </div>
+          </HeaderTitle>
+        </HeaderBar>
+        <EmptyState>
+          <EmptyIcon>📭</EmptyIcon>
+          <EmptyTitle>Nenhum usuário encontrado</EmptyTitle>
+          <EmptyDesc>Não há usuários cadastrados na plataforma.</EmptyDesc>
+        </EmptyState>
+      </UserContainer>
+    )
+  }
+
   return (
-    <Structure
-      title={t('admin:users')}
-      loading={loading}
-      breadcrumbs={[{ href: '/admin', name: t('admin:home') }]}
-      padded={false}
-      error={error?.message}
-    >
-      <Table
-        columns={columns}
-        dataSource={entries}
-        rowKey={'id'}
-        pagination={pagination}
-        onChange={async (next) => {
-          setPagination(next)
-          await refetch()
-        }}
-      />
-    </Structure>
+    <UserContainer>
+      <HeaderBar>
+        <HeaderTitle>
+          <EmptyIcon>👥</EmptyIcon>
+          <div>
+            <HeaderTitleText>{t('admin:users')}</HeaderTitleText>
+            <HeaderDesc>Gerencie os usuários da sua plataforma.</HeaderDesc>
+          </div>
+        </HeaderTitle>
+      </HeaderBar>
+      <TableWrapper>
+        <Table
+          columns={columns}
+          dataSource={entries}
+          rowKey={'id'}
+          pagination={pagination}
+          onChange={async (next) => {
+            setPagination(next)
+            await refetch()
+          }}
+          size={'middle'}
+        />
+      </TableWrapper>
+    </UserContainer>
   )
 }
 

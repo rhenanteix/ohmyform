@@ -1,5 +1,4 @@
 import { Button, Select } from 'antd'
-import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React from 'react'
 import GitHubButton from 'react-github-button'
@@ -35,7 +34,7 @@ const AuthFooterInner: React.FC<Props> = (props) => {
               Hi, {props.me.username}
           </span>,
           props.me.roles.includes('admin') && (
-            <Link key={'admin'} href={'/admin'}>
+            <a key={'admin'} href={'/admin'}>
               <Button
                 type={'link'}
                 style={{
@@ -44,9 +43,9 @@ const AuthFooterInner: React.FC<Props> = (props) => {
               >
                 {t('admin')}
               </Button>
-            </Link>
+            </a>
           ),
-          <Link key={'profile'} href={'/admin/profile'}>
+          <a key={'profile'} href={'/admin/profile'}>
             <Button
               type={'link'}
               style={{
@@ -55,7 +54,7 @@ const AuthFooterInner: React.FC<Props> = (props) => {
             >
               {t('profile')}
             </Button>
-          </Link>,
+          </a>,
           <Button
             key={'logout'}
             type={'link'}
@@ -68,7 +67,7 @@ const AuthFooterInner: React.FC<Props> = (props) => {
           </Button>,
         ]
         : [
-          <Link href={'/login'} key={'login'}>
+          <a href={'/login'} key={'login'}>
             <Button
               type={'link'}
               style={{
@@ -77,9 +76,9 @@ const AuthFooterInner: React.FC<Props> = (props) => {
             >
               {t('login')}
             </Button>
-          </Link>,
+          </a>,
           !loading && !data?.disabledSignUp.value && (
-            <Link href={'/register'} key={'register'}>
+            <a href={'/register'} key={'register'}>
               <Button
                 type={'link'}
                 style={{
@@ -88,7 +87,7 @@ const AuthFooterInner: React.FC<Props> = (props) => {
               >
                 {t('register')}
               </Button>
-            </Link>
+            </a>
           ),
         ]}
       <div style={{ flex: 1 }} />

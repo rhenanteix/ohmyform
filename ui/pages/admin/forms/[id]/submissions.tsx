@@ -8,7 +8,6 @@ import { TimeAgo } from 'components/time.ago'
 import { withAuth } from 'components/with.auth'
 import dayjs from 'dayjs'
 import { NextPage } from 'next'
-import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -140,13 +139,12 @@ const Submissions: NextPage = () => {
             </Button>
           )}
         />,
-        <Link
+        <a
           key={'edit'}
-          href={'/admin/forms/[id]'}
-          as={`/admin/forms/${router.query.id as string}`}
+          href={`/admin/forms/${router.query.id as string}`}
         >
           <Button>{t('submission:edit')}</Button>
-        </Link>,
+        </a>,
         <Button
           key={'web'}
           href={`/form/${router.query.id as string}`}
