@@ -14,7 +14,7 @@ import styled from 'styled-components'
 const CreateContainer = styled.div`
   max-width: 800px;
   margin: 0 auto;
-  padding: 24px;
+  padding: 32px 24px;
   position: relative;
 `
 
@@ -22,7 +22,7 @@ const HeaderBar = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 24px;
+  margin-bottom: 32px;
   flex-wrap: wrap;
   gap: 16px;
 `
@@ -30,20 +30,33 @@ const HeaderBar = styled.div`
 const HeaderTitle = styled.div`
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
 `
 
-const HeaderTitleText = styled.h2`
-  font-size: 22px;
-  font-weight: 900;
-  color: #0f172a;
-  margin: 0;
+const HeaderIcon = styled.div`
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.35);
 `
 
-const HeaderDesc = styled.span`
-  font-size: 13px;
-  color: #64748b;
-  margin-left: 4px;
+const HeaderTitleText = styled.div`
+  h2 {
+    font-size: 22px;
+    font-weight: 900;
+    color: #0f172a;
+    margin: 0 0 4px;
+  }
+  span {
+    font-size: 13px;
+    color: #64748b;
+  }
 `
 
 const FormCard = styled.div`
@@ -90,10 +103,13 @@ const Create: NextPage = () => {
     <CreateContainer>
       <HeaderBar>
         <HeaderTitle>
-          <HeaderTitleText>{t('form:create')}</HeaderTitleText>
-          <HeaderDesc>Crie um novo formulário em poucos cliques.</HeaderDesc>
+          <HeaderIcon>+</HeaderIcon>
+          <HeaderTitleText>
+            <h2>{t('form:create')}</h2>
+            <span>Crie um novo formulário em poucos cliques.</span>
+          </HeaderTitleText>
         </HeaderTitle>
-        <Button key={'create'} onClick={form.submit} type={'primary'}>
+        <Button key={'create'} onClick={form.submit} type={'primary'} disabled={saving}>
           {t('form:createNow')}
         </Button>
       </HeaderBar>

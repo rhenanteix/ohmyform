@@ -54,11 +54,11 @@ const AdminHeader = styled.header`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 64px;
+  height: 60px;
   padding: 0 24px;
-  background: var(--omf-gradient);
-  color: #fff;
-  box-shadow: 0 4px 20px rgba(139, 92, 246, 0.25);
+  background: #fff;
+  color: #0f172a;
+  border-bottom: 1px solid var(--omf-border);
   position: sticky;
   top: 0;
   z-index: 40;
@@ -79,17 +79,18 @@ const SidebarToggle = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
+  width: 34px;
+  height: 34px;
   border: none;
   border-radius: 10px;
-  background: rgba(255, 255, 255, 0.15);
-  color: #fff;
+  background: var(--omf-bg-secondary);
+  color: #64748b;
   cursor: pointer;
   transition: var(--omf-transition);
 
   &:hover {
-    background: rgba(255, 255, 255, 0.3);
+    background: #e2e8f0;
+    color: #8B5CF6;
   }
 
   @media (min-width: 768px) {
@@ -104,6 +105,16 @@ const Brand = styled.div`
   cursor: pointer;
 `
 
+const BrandText = styled.div`
+  font-size: 18px;
+  font-weight: 900;
+  color: #0f172a;
+  letter-spacing: -0.02em;
+  background: var(--omf-gradient-text);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+`
+
 const HeaderRight = styled.div`
   display: flex;
   align-items: center;
@@ -115,6 +126,7 @@ const AdminSider = styled(Sider)<{ $sidebarOpen?: boolean }>`
   border-right: 1px solid var(--omf-border);
   box-shadow: 4px 0 20px rgba(0, 0, 0, 0.04);
   flex-shrink: 0;
+  width: 250px !important;
 
   .ant-layout-sider-children {
     display: flex;
@@ -140,6 +152,7 @@ const AdminSider = styled(Sider)<{ $sidebarOpen?: boolean }>`
     margin: 0 10px 6px !important;
     color: #64748b !important;
     font-weight: 600 !important;
+    font-size: 13px !important;
     transition: var(--omf-transition);
   }
 
@@ -154,6 +167,16 @@ const AdminSider = styled(Sider)<{ $sidebarOpen?: boolean }>`
   .ant-menu-item-selected {
     border-left: 4px solid #8B5CF6 !important;
     box-shadow: inset 0 2px 4px rgba(139, 92, 246, 0.15);
+  }
+
+  .ant-menu-sub-title {
+    color: #94a3b8 !important;
+    text-transform: uppercase;
+    font-size: 11px !important;
+    font-weight: 800 !important;
+    letter-spacing: 0.12em !important;
+    padding: 12px 24px !important;
+    margin: 0 10px 10px !important;
   }
 
   @media (max-width: 767px) {
@@ -198,6 +221,11 @@ const AdminContent = styled.main<{ padded?: boolean }>`
   @media (max-width: 767px) {
     padding: 16px;
   }
+`
+
+const PageWrapper = styled.div`
+  max-width: 1200px;
+  margin: 0 auto;
 `
 
 export const Structure: FunctionComponent<Props> = (props) => {
@@ -331,13 +359,13 @@ export const Structure: FunctionComponent<Props> = (props) => {
             onVisibleChange={setUserMenu}
             visible={userMenu}
           >
-            <Space style={{ alignItems: 'center', gap: 8, color: '#fff' }}>
-              <div style={{ fontWeight: 600, fontSize: 14 }}>
+            <Space style={{ alignItems: 'center', gap: 8, color: '#0f172a' }}>
+              <div style={{ fontWeight: 600, fontSize: 14, color: '#0f172a' }}>
                 Olá{' '}
                 {user.data && user.data.me.username ? user.data.me.username : 'usuário'}
               </div>
-              <UserOutlined style={{ fontSize: 22 }} />
-              <CaretDownOutlined style={{ color: '#fff', opacity: 0.9 }} />
+              <UserOutlined style={{ fontSize: 20, color: '#64748b' }} />
+              <CaretDownOutlined style={{ color: '#94a3b8' }} />
             </Space>
           </Dropdown>
         </HeaderRight>
@@ -348,7 +376,7 @@ export const Structure: FunctionComponent<Props> = (props) => {
         trigger={null}
         collapsedWidth={0}
         breakpoint={'xs'}
-        width={240}
+        width={250}
         className={'sidemenu'}
       >
         <Menu
@@ -388,49 +416,51 @@ export const Structure: FunctionComponent<Props> = (props) => {
       </AdminSider>
 
       <AdminContent padded={props.padded !== false}>
-        {props.title && (
-          <PageHeader
-            title={props.title}
-            subTitle={props.subTitle}
-            extra={props.extra}
-            breadcrumb={{
-              routes: [
-                ...(props.breadcrumbs || []).map((b) => ({
-                  breadcrumbName: b.name,
-                  path: '',
-                })),
-                { breadcrumbName: props.title, path: '' },
-              ],
-              params: props.breadcrumbs,
-              itemRender(route, params: BreadcrumbEntry[], routes) {
-                if (routes.indexOf(route) === routes.length - 1) {
-                  return <span>{route.breadcrumbName}</span>
-                }
-                const entry = params[routes.indexOf(route)]
-                return (
-                  <a href={entry.href}>
-                    {entry.name}
-                  </a>
-                )
-              },
-            }}
-          />
-        )}
-        {props.error && (
-          <Alert message={props.error} type={'error'} style={{ marginBottom: 24 }} />
-        )}
-        <Spin spinning={!!props.loading}>
-          <Content
-            style={{
-              background: props.padded ? '#fff' : null,
-              padding: props.padded ? 24 : 0,
-              borderRadius: props.padded ? 16 : 0,
-              ...props.style,
-            }}
-          >
-            {props.children}
-          </Content>
-        </Spin>
+        <PageWrapper>
+          {props.title && (
+            <PageHeader
+              title={props.title}
+              subTitle={props.subTitle}
+              extra={props.extra}
+              breadcrumb={{
+                routes: [
+                  ...(props.breadcrumbs || []).map((b) => ({
+                    breadcrumbName: b.name,
+                    path: '',
+                  })),
+                  { breadcrumbName: props.title, path: '' },
+                ],
+                params: props.breadcrumbs,
+                itemRender(route, params: BreadcrumbEntry[], routes) {
+                  if (routes.indexOf(route) === routes.length - 1) {
+                    return <span>{route.breadcrumbName}</span>
+                  }
+                  const entry = params[routes.indexOf(route)]
+                  return (
+                    <a href={entry.href}>
+                      {entry.name}
+                    </a>
+                  )
+                },
+              }}
+            />
+          )}
+          {props.error && (
+            <Alert message={props.error} type={'error'} style={{ marginBottom: 24 }} />
+          )}
+          <Spin spinning={!!props.loading}>
+            <Content
+              style={{
+                background: props.padded ? '#fff' : null,
+                padding: props.padded ? 24 : 0,
+                borderRadius: props.padded ? 16 : 0,
+                ...props.style,
+              }}
+            >
+              {props.children}
+            </Content>
+          </Spin>
+        </PageWrapper>
       </AdminContent>
     </AdminRoot>
   )

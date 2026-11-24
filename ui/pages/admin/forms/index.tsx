@@ -23,7 +23,7 @@ import styled from 'styled-components'
 const FormContainer = styled.div`
   max-width: 1200px;
   margin: 0 auto;
-  padding: 24px;
+  padding: 32px 24px;
   position: relative;
 `
 
@@ -31,7 +31,7 @@ const HeaderBar = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 24px;
+  margin-bottom: 32px;
   flex-wrap: wrap;
   gap: 16px;
 `
@@ -39,20 +39,33 @@ const HeaderBar = styled.div`
 const HeaderTitle = styled.div`
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
 `
 
-const HeaderTitleText = styled.h2`
-  font-size: 22px;
-  font-weight: 900;
-  color: #0f172a;
-  margin: 0;
+const HeaderIcon = styled.div`
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.35);
 `
 
-const HeaderDesc = styled.span`
-  font-size: 13px;
-  color: #64748b;
-  margin-left: 4px;
+const HeaderTitleText = styled.div`
+  h2 {
+    font-size: 22px;
+    font-weight: 900;
+    color: #0f172a;
+    margin: 0 0 4px;
+  }
+  span {
+    font-size: 13px;
+    color: #64748b;
+  }
 `
 
 const ActionsGroup = styled.div`
@@ -112,7 +125,7 @@ const Index: NextPage = () => {
     pageSize: 25,
   })
   const [entries, setEntries] = useState<FormPagerFragment[]>()
-  const { loading, refetch } = useFormPagerQuery({
+  const { loading, refetch, error } = useFormPagerQuery({
     variables: {
       limit: pagination.pageSize,
       start: Math.max(0, pagination.current - 1) * pagination.pageSize || 0,
@@ -167,7 +180,7 @@ const Index: NextPage = () => {
         return (
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
             <div style={{ width: 40, height: 40, borderRadius: 10, background: '#f0f9ff', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#8B5CF6', fontWeight: 900 }}>
-              {record.title.charAt(0).toUpperCase()}
+              {text.charAt(0).toUpperCase()}
             </div>
             <span style={{ fontWeight: 700, color: '#0f172a' }}>{text}</span>
           </div>
@@ -226,18 +239,12 @@ const Index: NextPage = () => {
       render(_, row) {
         return (
           <Space direction={width < 600 ? 'vertical' : 'horizontal'} style={{ gap: 8 }}>
-            <Tooltip title={'Ver respostas'}>
-              <a href={`/admin/forms/${row.id}/submissions`}>
-                <a href={`/admin/forms/${row.id}/submissions`} style={{ textDecoration: 'none' }}>
-                  <Button ghost icon={<UnorderedListOutlined />} />
-                </a>
-              </a>
-            </Tooltip>
+            <a href={`/admin/forms/${row.id}/submissions`} style={{ textDecoration: 'none' }}>
+              <Button ghost icon={<UnorderedListOutlined />} />
+            </a>
 
-            <a href={`/admin/forms/${row.id}`}>
-              <a href={`/admin/forms/${row.id}`} style={{ textDecoration: 'none' }}>
-                <Button type='primary' icon={<EditOutlined />} />
-              </a>
+            <a href={`/admin/forms/${row.id}`} style={{ textDecoration: 'none' }}>
+              <Button type='primary' icon={<EditOutlined />} />
             </a>
 
             <Popconfirm
@@ -274,13 +281,11 @@ const Index: NextPage = () => {
       <FormContainer>
         <HeaderBar>
           <HeaderTitle>
-            <EmptyIcon>📝</EmptyIcon>
-            <div>
-              <HeaderTitleText>{t('admin:forms')}</HeaderTitleText>
-              <HeaderDesc>
-                Crie seu primeiro formulário para começar a coletar respostas.
-              </HeaderDesc>
-            </div>
+            <HeaderIcon>📝</HeaderIcon>
+            <HeaderTitleText>
+              <h2>{t('admin:forms')}</h2>
+              <span>Gerencie todos os seus formulários em um só lugar.</span>
+            </HeaderTitleText>
           </HeaderTitle>
           <ActionsGroup>
             <a href={'/admin/forms/create'}>
@@ -304,11 +309,11 @@ const Index: NextPage = () => {
     <FormContainer>
       <HeaderBar>
         <HeaderTitle>
-          <EmptyIcon>📝</EmptyIcon>
-          <div>
-            <HeaderTitleText>{t('admin:forms')}</HeaderTitleText>
-            <HeaderDesc>Gerencie todos os seus formulários em um só lugar.</HeaderDesc>
-          </div>
+          <HeaderIcon>📝</HeaderIcon>
+          <HeaderTitleText>
+            <h2>{t('admin:forms')}</h2>
+            <span>Gerencie todos os seus formulários em um só lugar.</span>
+          </HeaderTitleText>
         </HeaderTitle>
         <ActionsGroup>
           <a href={'/admin/forms/create'}>
@@ -328,6 +333,7 @@ const Index: NextPage = () => {
           }}
           size={'middle'}
           rowClassName={() => 'ant-table-row'}
+          locale={{ emptyText: '' }}
         />
       </TableWrapper>
     </FormContainer>

@@ -1,29 +1,83 @@
+# Git
 .git
 .github
-.idea
-data
-docker
-node_modules
-selenium
-examples
-.all-contributorsrc
-.csslintrc
-.editorconfig
-.env.example
 .gitignore
-.jshintrc
-.slugignore
+
+# IDE
+.idea
+.vscode
+*.swp
+*.swo
+
+# Documentation
 *.md
-conf.json
-docker-compose.yml
+LICENSE*
+CHANGELOG*
+README*
+
+# Docker
 Dockerfile
-Procfile
-protractor.conf.js
-pg_data
-ui/.next
-ui/node_modules
+.dockerignore
+docker-compose.yml
+docker/
+
+# Dependencies (handled by Docker cache)
+node_modules
 api/node_modules
+ui/node_modules
+
+# Build artifacts
+ui/.next
+api/dist
+api/dist/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Data & volumes
+data
+pg_data
 api/pg_data
 api/data
 api/maria_data
-api/dist
+selenium
+examples
+
+# Config files that shouldn't be in image
+.env*
+.env.example
+.conf.json
+conf.json
+Procfile
+protractor.conf.js
+.jshintrc
+.csslintrc
+.editorconfig
+.slugignore
+.all-contributorsrc
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# TypeScript
+*.tsbuildinfo
+
+# Next.js specific
+ui/.next/cache
+ui/out
+ui/public/assets/generated
+
+# Coverage
+coverage
+.coverage
+htmlcov
+
+# Test
+test/
+tests/
+*.test.ts
+*.spec.ts
+__pycache__/
+*.pyc
