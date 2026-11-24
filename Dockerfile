@@ -8,9 +8,11 @@ RUN apk --update --no-cache add curl bash g++ make libpng-dev
 # install node-prune (https://github.com/tj/node-prune)
 RUN curl -sf https://gobinaries.com/tj/node-prune | sh
 
-COPY ui/ .
+COPY ui/package.json ui/yarn.lock ./
+RUN --mount=type=cache,target=/root/.yarn-cache,sharing=locked \
+    yarn install --frozen-lockfile
 
-RUN yarn install --frozen-lockfile
+COPY ui/ .
 RUN yarn build
 
 # remove development dependencies
@@ -31,11 +33,14 @@ RUN apk --update --no-cache add curl bash g++ make libpng-dev python3 py3-setupt
 # install node-prune (https://github.com/tj/node-prune)
 RUN curl -sf https://gobinaries.com/tj/node-prune | sh
 
+COPY api/package.json api/yarn.lock ./
+RUN --mount=type=cache,target=/root/.yarn-cache,sharing=locked \
+    yarn install --frozen-lockfile
+
 COPY api/ .
 
 RUN touch /usr/src/api/src/schema.gql && chown 9999:9999 /usr/src/api/src/schema.gql
 
-RUN yarn install --frozen-lockfile
 RUN yarn build
 
 # remove development dependencies
@@ -71,4 +76,3 @@ COPY supervisord.conf /etc/supervisord.conf
 COPY nginx.conf /etc/nginx/nginx.conf
 
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]
-# CMD [ "yarn", "start:prod" ]
