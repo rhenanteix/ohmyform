@@ -21,6 +21,8 @@
   --omf-radius-sm: #{$omf-radius-sm};
   --omf-shadow: #{$omf-shadow};
   --omf-transition: #{$omf-transition};
+  --omf-gradient: linear-gradient(135deg, #8B5CF6 0%, #EC4899 50%, #F59E0B 100%);
+  --omf-gradient-text: linear-gradient(135deg, #8B5CF6 0%, #EC4899 50%, #F59E0B 100%);
 
   --backgroundColor: #{$background-color};
   --primaryColor: #{$primary-color};
