@@ -1,0 +1,42 @@
+{
+  "version": 2,
+  "framework": "nextjs",
+  "buildCommand": "cd ui && yarn install --frozen-lockfile && yarn build",
+  "devCommand": "cd ui && yarn dev",
+  "installCommand": "cd ui && yarn install --frozen-lockfile",
+  "outputDirectory": "ui/.next",
+  "regions": ["gru1"],
+  "builds": [
+    {
+      "src": "ui/package.json",
+      "use": "@vercel/nextjs-build",
+      "config": {
+        "distDir": ".next"
+      }
+    },
+    {
+      "src": "api/graphql.ts",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/graphql(.*)",
+      "dest": "/api/graphql.ts"
+    },
+    {
+      "src": "/_next(.*)",
+      "dest": "/ui/_next$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/ui/$1"
+    }
+  ],
+  "env": {
+    "NODE_ENV": "production",
+    "NEXT_TELEMETRY_DISABLED": "1",
+    "ENDPOINT": "/graphql",
+    "SERVER_ENDPOINT": "/graphql"
+  }
+}

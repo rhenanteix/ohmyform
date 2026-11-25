@@ -12,6 +12,8 @@ ENV NEXT_TELEMETRY_DISABLED=1 \
     CI=true \
     YARN_ENABLE_NETWORK_CACHE=0 \
     YARN_ENABLE_GLOBAL_CACHE=true \
+    YARN_CACHE_FOLDER=/usr/local/share/.cache/yarn \
+    NEXT_TURBO_PACKAGE_CACHE=/usr/local/share/.cache/turbo \
     YARN_NETWORK_TIMEOUT=600000 \
     YARN_RETRY_CONNECTION_TIMEOUT=120000 \
     YARN_HTTP_TIMEOUT=120000 \
@@ -26,14 +28,16 @@ WORKDIR /usr/src/ui
 # Copy lockfiles first for dependency caching
 COPY ui/package.json ui/yarn.lock ./
 
-# Install all dependencies (including devDeps for build) with retry and cache
-RUN yarn install --frozen-lockfile && yarn cache clean
+# Install all dependencies (including devDeps for build) with cache mount
+RUN --mount=type=cache,target=/usr/local/share/.cache/yarn \
+    yarn install --frozen-lockfile
 
 # Copy source
 COPY ui/ .
 
-# Build
-RUN yarn build
+# Build with Next.js cache mount
+RUN --mount=type=cache,target=/usr/src/ui/.next/cache \
+    yarn build
 
 # Prune dev deps
 RUN npm prune --production
@@ -49,8 +53,9 @@ WORKDIR /usr/src/api
 # Copy lockfiles first
 COPY api/package.json api/yarn.lock ./
 
-# Install all dependencies
-RUN yarn install --frozen-lockfile && yarn cache clean
+# Install all dependencies with cache mount
+RUN --mount=type=cache,target=/usr/local/share/.cache/yarn \
+    yarn install --frozen-lockfile
 
 # Copy source
 COPY api/ .
