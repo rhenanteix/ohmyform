@@ -1,5 +1,5 @@
 import { PlusOutlined } from '@ant-design/icons/lib'
-import { Button, Form, Space, Tabs } from 'antd'
+import { Form, Space, Tabs } from 'antd'
 import { FormInstance } from 'antd/lib/form'
 import { TabPaneProps } from 'antd/lib/tabs'
 import React, { useCallback } from 'react'
@@ -9,6 +9,7 @@ import {
   FormNotificationFragment,
 } from '../../../graphql/fragment/form.fragment'
 import { NotificationCard } from './notification.card'
+import { Button } from 'src/components/primitives'
 
 interface Props extends TabPaneProps {
   form: FormInstance
@@ -39,7 +40,7 @@ export const NotificationsTab: React.FC<Props> = (props) => {
             }}
           >
             <Button
-              type="dashed"
+              variant="dashed"
               onClick={() => {
                 const defaults: FormNotificationFragment = {
                   id: Math.random().toString(),

@@ -16,6 +16,7 @@ export const Button = styled.button<{
   cursor: pointer;
   transition: var(--omf-transition);
   white-space: nowrap;
+  text-decoration: none;
   outline: none;
 
   ${({ size }) => {
@@ -39,15 +40,15 @@ export const Button = styled.button<{
   }}
 
   ${({ variant }) => {
-    switch (variant) {
+    switch (variant || 'primary') {
       case 'primary':
         return `
           background: var(--omf-gradient);
           color: #fff;
-          box-shadow: 0 4px 14px 0 rgba(139, 92, 246, 0.35);
+          box-shadow: 0 4px 14px 0 rgba(23, 107, 88, 0.35);
           &:hover:not(:disabled) {
             filter: brightness(1.05);
-            box-shadow: 0 6px 20px 0 rgba(139, 92, 246, 0.45);
+            box-shadow: 0 6px 20px 0 rgba(23, 107, 88, 0.45);
             transform: translateY(-1px);
           }
           &:active:not(:disabled) {
@@ -72,8 +73,8 @@ export const Button = styled.button<{
           border: 1px solid #e2e8f0;
           &:hover:not(:disabled) {
             background: #f8fafc;
-            border-color: #8B5CF6;
-            color: #8B5CF6;
+            border-color: #176b58;
+            color: #176b58;
           }
         `
       case 'ghost':
@@ -135,8 +136,8 @@ export const Input = styled.input<{ error?: boolean }>`
   }
 
   &:focus {
-    border-color: #8B5CF6;
-    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.15);
+    border-color: #176b58;
+    box-shadow: 0 0 0 3px rgba(23, 107, 88, 0.15);
   }
 
   ${({ error }) =>
@@ -167,8 +168,8 @@ export const Textarea = styled.textarea<{ error?: boolean }>`
   }
 
   &:focus {
-    border-color: #8B5CF6;
-    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.15);
+    border-color: #176b58;
+    box-shadow: 0 0 0 3px rgba(23, 107, 88, 0.15);
   }
 `
 

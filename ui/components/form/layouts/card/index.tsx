@@ -22,14 +22,20 @@ const MyCard = styled.div<{ background: string }>`
   min-height: 100vh;
   min-height: calc(var(--vh, 1vh) * 100);
 
-  padding: 32px;
+  padding: clamp(12px, 4vw, 48px);
 
   .ant-card {
     background: ${(props) => props.background};
     border-color: ${(props) => lighten(0.4, props.background)};
     width: 800px;
     margin: auto;
-    max-width: 90%;
+    max-width: 100%;
+    border-radius: 20px;
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.08);
+    &:hover { transform: none; }
+    @media (max-width: 600px) {
+      .ant-card-body { padding: 12px; }
+    }
   }
 `
 

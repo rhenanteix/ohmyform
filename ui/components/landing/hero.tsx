@@ -16,8 +16,9 @@ export const Hero = () => {
   const [showResult, setShowResult] = useState(false)
 
   useEffect(() => {
+    if (answer || showResult) return
     const t = setTimeout(() => {
-      setTyping(true)
+      setTyping(false)
       setCurrentQuestion((prev) =>
         questions[(questions.indexOf(prev) + 1) % questions.length]
       )
@@ -25,7 +26,11 @@ export const Hero = () => {
       setShowResult(false)
     }, 6000)
     return () => clearTimeout(t)
-  }, [currentQuestion])
+  }, [
+    currentQuestion,
+    answer,
+    showResult,
+  ])
 
   const handleAnswer = (e: React.ChangeEvent<HTMLInputElement>) => {
     setAnswer(e.target.value)
@@ -56,8 +61,8 @@ export const Hero = () => {
               questionários e pesquisas que convertem — com um pouco de humor e muita cor.
             </PageSubtitle>
             <HeroActions>
-              <Button size="lg">Começar de graça <FiArrowRight size={20} /></Button>
-              <Button variant="outline" size="lg">Ver exemplos <FiStar size={20} /></Button>
+              <Button as="a" href="/register" size="lg">Começar de graça <FiArrowRight size={20} /></Button>
+              <Button as="a" href="#templates" variant="outline" size="lg">Ver exemplos <FiStar size={20} /></Button>
             </HeroActions>
             <TrustBar>
               <TrustItem>Ilimitado</TrustItem>
@@ -73,6 +78,7 @@ export const Hero = () => {
             <PreviewForm onSubmit={handleSubmit}>
               <PreviewQuestion>{currentQuestion}</PreviewQuestion>
               <PreviewInput
+                aria-label="Sua resposta para a demonstração"
                 value={answer}
                 onChange={handleAnswer}
                 placeholder="Digite sua resposta..."
@@ -105,14 +111,14 @@ const Blob = styled.div<{ index: number }>`
   position: absolute;
   border-radius: 50%;
   filter: blur(60px);
-  opacity: 0.45;
+  opacity: 0.09;
   animation: drift 10s ease-in-out infinite;
 
   ${({ index }) => {
     const positions: Record<string, string> = {
-      1: 'top: -8%; left: 8%; width: 600px; height: 600px; background: #8B5CF6; animation-delay: 0s;',
-      2: 'bottom: -12%; right: 12%; width: 500px; height: 500px; background: #EC4899; animation-delay: -3s;',
-      3: 'top: 35%; left: 62%; width: 400px; height: 400px; background: #F59E0B; animation-delay: -6s;',
+      1: 'top: -8%; left: 8%; width: 600px; height: 600px; background: #176b58; animation-delay: 0s;',
+      2: 'bottom: -12%; right: 12%; width: 500px; height: 500px; background: #438675; animation-delay: -3s;',
+      3: 'top: 35%; left: 62%; width: 400px; height: 400px; background: #b78136; animation-delay: -6s;',
     }
     return positions[index]
   }}
@@ -151,7 +157,7 @@ const Eyebrow = styled.span`
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.14em;
-  color: #EC4899;
+  color: #438675;
 `
 
 const GradientText = styled.span`
@@ -169,7 +175,8 @@ const HeroActions = styled.div`
 const TrustBar = styled.div`
   display: flex;
   align-items: center;
-  gap: 24px;
+  gap: 16px;
+  flex-wrap: wrap;
   margin-top: 6px;
 `
 
@@ -187,12 +194,13 @@ const PreviewCard = styled.div`
   border-radius: 24px;
   border: 1px solid #e2e8f0;
   box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.1), 0 10px 20px -10px rgba(0, 0, 0, 0.04);
-  padding: 28px;
+  padding: clamp(24px, 4vw, 44px);
   position: relative;
   overflow: hidden;
 
   @media (max-width: 1023px) {
-    max-width: 360px;
+    width: 100%;
+    max-width: 520px;
     margin: 0 auto;
   }
 `
@@ -230,7 +238,7 @@ const PreviewForm = styled.form`
 `
 
 const PreviewQuestion = styled.div`
-  font-size: 17px;
+  font-size: clamp(22px, 2.5vw, 30px);
   font-weight: 800;
   color: #0f172a;
   line-height: 1.4;
@@ -241,7 +249,7 @@ const PreviewInput = styled.input`
   width: 100%;
   padding: 14px 16px;
   font-size: 15px;
-  border: 2px dashed #cbd5e1;
+  border: 1px solid #cbd5e1;
   border-radius: 14px;
   background: #f8fafc;
   color: #0f172a;
@@ -249,9 +257,9 @@ const PreviewInput = styled.input`
   transition: var(--omf-transition);
 
   &:focus {
-    border-color: #8B5CF6;
+    border-color: #176b58;
     background: #fff;
-    box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.12);
+    box-shadow: 0 0 0 4px rgba(23, 107, 88, 0.12);
   }
 
   &:disabled {
@@ -274,7 +282,7 @@ const PreviewButton = styled.button`
   background: var(--omf-gradient);
   cursor: pointer;
   transition: var(--omf-transition);
-  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.35);
+  box-shadow: 0 4px 12px rgba(23, 107, 88, 0.35);
 
   &:hover:not(:disabled) {
     filter: brightness(1.05);

@@ -3,9 +3,9 @@ import styled from 'styled-components'
 import { Card, Container, Grid, PageSubtitle, PageTitle, Section } from '../ui'
 
 const templates = [
-  { name: 'Pesquisa de satisfação', label: 'CX', color: '#8B5CF6' },
-  { name: 'Quiz de personalidade', label: 'Diversão', color: '#EC4899' },
-  { name: 'Inscrição de evento', label: 'Eventos', color: '#F59E0B' },
+  { name: 'Pesquisa de satisfação', label: 'CX', color: '#176b58' },
+  { name: 'Quiz de personalidade', label: 'Diversão', color: '#438675' },
+  { name: 'Inscrição de evento', label: 'Eventos', color: '#b78136' },
   { name: 'Avaliação de produto', label: 'Produto', color: '#10B981' },
 ]
 
@@ -91,7 +91,7 @@ const TemplatePreview = styled.div`
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(90deg, transparent 0%, rgba(139, 92, 246, 0.15) 100%);
+    background: linear-gradient(90deg, transparent 0%, rgba(23, 107, 88, 0.15) 100%);
     transform: translateX(-100%);
     animation: shimmer 2s infinite;
   }

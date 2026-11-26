@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { FiMenu, FiExternalLink } from 'react-icons/fi'
+import { FiMenu, FiX } from 'react-icons/fi'
 import styled from 'styled-components'
 import { Button, Logo } from '../ui'
 
@@ -58,7 +58,7 @@ const NavLink = styled.a`
   transition: var(--omf-transition);
 
   &:hover {
-    color: #8B5CF6;
+    color: #176b58;
   }
 `
 
@@ -124,7 +124,7 @@ const MobileLink = styled.a`
   border-bottom: 1px solid #f1f5f9;
 
   &:hover {
-    color: #8B5CF6;
+    color: #176b58;
   }
 `
 
@@ -146,20 +146,22 @@ export const Navbar = () => {
             ))}
           </NavLinks>
           <NavActions>
-            <Button variant="ghost" size="sm">Entrar</Button>
-            <Button size="sm">Criar formulário grátis</Button>
+            <Button as="a" href="/login" variant="ghost" size="sm">Entrar</Button>
+            <Button as="a" href="/register" size="sm">Criar formulário grátis</Button>
           </NavActions>
-          <MobileToggle onClick={() => setOpen(!open)} aria-label="Menu">
-            {open ? <FiMenu size={20} /> : <FiExternalLink size={20} />}
+          <MobileToggle onClick={() => setOpen(!open)} aria-label="Menu" aria-expanded={open} aria-controls="mobile-navigation">
+            {open ? <FiX size={20} /> : <FiMenu size={20} />}
           </MobileToggle>
         </NavBar>
         {open && (
-          <MobileMenu>
+          <MobileMenu id="mobile-navigation">
             {links.map((item) => (
               <MobileLink key={item.href} href={item.href}>
                 {item.label}
               </MobileLink>
             ))}
+            <MobileLink href="/login">Entrar</MobileLink>
+            <MobileLink href="/register">Criar formulário grátis</MobileLink>
           </MobileMenu>
         )}
       </NavbarContainer>

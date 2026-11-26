@@ -81,3 +81,12 @@ tests/
 *.spec.ts
 __pycache__/
 *.pyc
+# Local tooling and generated reports
+**/node_modules
+**/.next
+**/coverage
+**/.DS_Store
+.agents
+.codex
+.aws
+artifacts

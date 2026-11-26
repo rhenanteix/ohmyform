@@ -109,8 +109,8 @@ const PricingCard = styled(Card)<{ popular?: boolean }>`
   gap: 20px;
   min-height: 560px;
   justify-content: space-between;
-  border: ${({ popular }) => (popular ? '2px solid #8B5CF6' : '1px solid #e2e8f0')};
-  background: ${({ popular }) => (popular ? '#faf5ff' : '#fff')};
+  border: ${({ popular }) => (popular ? '2px solid #176b58' : '1px solid #e2e8f0')};
+  background: ${({ popular }) => (popular ? '#f0f6f2' : '#fff')};
 
   @media (min-width: 768px) {
     transform: ${({ popular }) => (popular ? 'scale(1.04)' : 'scale(1)')};
@@ -131,7 +131,7 @@ const PopularBadge = styled.span`
   border-radius: 999px;
   background: var(--omf-gradient);
   color: #fff;
-  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.35);
+  box-shadow: 0 4px 12px rgba(23, 107, 88, 0.35);
 `
 
 const PlanName = styled.h3`
@@ -150,7 +150,7 @@ const PlanPrice = styled.div`
 
 const PlanPriceValue = styled.span`
   font-size: 36px;
-  font-weight: 900;
+  font-weight: 700;
   color: #0f172a;
   line-height: 1;
 `

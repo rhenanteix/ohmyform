@@ -34,11 +34,11 @@ export type Theme = {
 
 export const theme: Theme = {
   colors: {
-    primary: '#8B5CF6',
-    primary2: '#EC4899',
-    primary3: '#F59E0B',
+    primary: '#176b58',
+    primary2: '#438675',
+    primary3: '#b78136',
     success: '#10B981',
-    warning: '#F59E0B',
+    warning: '#b78136',
     danger: '#EF4444',
     info: '#3B82F6',
     bg: '#F8FAFC',
@@ -48,8 +48,8 @@ export const theme: Theme = {
     textMuted: '#64748B',
     border: '#E2E8F0',
     white: '#FFFFFF',
-    gradient: 'linear-gradient(135deg, #8B5CF6 0%, #EC4899 50%, #F59E0B 100%)',
-    gradientText: 'linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%)',
+    gradient: 'linear-gradient(135deg, #176b58 0%, #438675 50%, #b78136 100%)',
+    gradientText: 'linear-gradient(135deg, #176b58 0%, #438675 100%)',
   },
   radii: {
     sm: '8px',

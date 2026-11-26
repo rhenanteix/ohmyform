@@ -1,6 +1,10 @@
 .footer {
-  position: absolute;
+  position: relative;
   padding-left: 16px;
+  margin-top: auto;
+  padding: 20px;
+  gap: 12px;
+  flex-wrap: wrap;
   margin-bottom: 4px;
   bottom: 0;
   left: 0;

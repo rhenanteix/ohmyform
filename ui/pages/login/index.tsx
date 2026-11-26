@@ -20,7 +20,8 @@ import styled from 'styled-components'
 import { Logo } from '../../components/ui'
 
 const AuthContainer = styled.div`
-  max-width: 420px;
+  width: 100%;
+  max-width: 480px;
   margin: 0 auto;
   padding: 40px 20px;
   position: relative;
@@ -28,46 +29,31 @@ const AuthContainer = styled.div`
 `
 
 const LoginCard = styled.div`
-  background: rgba(255, 255, 255, 0.92);
-  backdrop-filter: blur(16px);
-  border-radius: 24px;
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.1);
-  padding: 40px 32px;
+  padding: 12px 8px;
+  width: 100%;
   position: relative;
-  overflow: hidden;
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background: var(--omf-gradient);
-  }
 `
 
 const BrandWrapper = styled.div`
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-bottom: 24px;
+  margin-bottom: 16px;
 `
 
 const WelcomeTitle = styled.h2`
-  font-size: 26px;
-  font-weight: 900;
-  color: #0f172a;
+  font-size: 30px;
+  font-weight: 700;
+  color: #233c35;
   margin: 0 0 8px;
-  text-align: center;
+  text-align: left;
 `
 
 const WelcomeSub = styled.p`
   font-size: 15px;
   color: #64748b;
   margin: 0 0 32px;
-  text-align: center;
+  text-align: left;
   line-height: 1.5;
 `
 
@@ -75,12 +61,13 @@ const FormFooter = styled.div`
   margin-top: 24px;
   padding-top: 20px;
   border-top: 1px solid #e2e8f0;
-  text-align: center;
+  text-align: left;
 `
 
 const FooterLinks = styled.div`
   display: flex;
   gap: 12px;
+  flex-wrap: wrap;
   justify-content: center;
   margin-bottom: 16px;
 `
@@ -125,9 +112,7 @@ const Index: NextPage = () => {
             <Logo width={36} height={36} brandText={false} />
             <WelcomeTitle>Bem-vindo de volta</WelcomeTitle>
           </BrandWrapper>
-          <WelcomeSub>
-            Faça login para acessar seus formulários e respostas.
-          </WelcomeSub>
+          <WelcomeSub>Faça login para acessar seus formulários e respostas.</WelcomeSub>
           <Form
             form={form}
             name="login"
@@ -149,20 +134,30 @@ const Index: NextPage = () => {
 
             <Form.Item
               name="username"
+              label={t('login:usernamePlaceholder')}
               rules={[{ required: true, message: t('validation:usernameRequired') }]}
             >
-              <Input size="large" placeholder={t('login:usernamePlaceholder')} />
+              <Input
+                size="large"
+                autoComplete="username"
+                placeholder={t('login:usernamePlaceholder')}
+              />
             </Form.Item>
 
             <Form.Item
               name="password"
+              label={t('login:passwordPlaceholder')}
               rules={[{ required: true, message: t('validation:passwordRequired') }]}
             >
-              <Input.Password size="large" placeholder={t('login:passwordPlaceholder')} />
+              <Input.Password
+                autoComplete="current-password"
+                size="large"
+                placeholder={t('login:passwordPlaceholder')}
+              />
             </Form.Item>
 
             <Form.Item>
-              <Button size="large" type="primary" htmlType="submit" block>
+              <Button size="large" type="primary" htmlType="submit" block loading={loading}>
                 {t('login:loginNow')}
               </Button>
             </Form.Item>
@@ -172,15 +167,11 @@ const Index: NextPage = () => {
             <FooterLinks>
               {(!data || !data.disabledSignUp.value) && (
                 <a href={'/register'}>
-                  <Button type={'link'} ghost>
-                    {t('register')}
-                  </Button>
+                  <Button type={'link'}>{t('register')}</Button>
                 </a>
               )}
               <a href={'/login/recover'}>
-                <Button type={'link'} ghost>
-                  {t('recover')}
-                </Button>
+                <Button type={'link'}>{t('recover')}</Button>
               </a>
             </FooterLinks>
           </FormFooter>

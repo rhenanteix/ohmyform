@@ -1,131 +1,284 @@
 import {
   DeleteOutlined,
   EditOutlined,
+  FileTextOutlined,
+  InboxOutlined,
   GlobalOutlined,
   UnorderedListOutlined,
   WarningOutlined,
-} from '@ant-design/icons'
-import { Button, message, Popconfirm, Space, Table, Tag, Tooltip } from 'antd'
-import { PaginationProps } from 'antd/es/pagination'
-import { ColumnsType } from 'antd/lib/table/interface'
-import { DateTime } from 'components/date.time'
-import { TimeAgo } from 'components/time.ago'
-import { withAuth } from 'components/with.auth'
-import { NextPage } from 'next'
-import React, { useState } from 'react'
-import { useTranslation } from 'react-i18next'
-import { useWindowSize } from '../../../components/use.window.size'
-import { FormPagerFragment } from '../../../graphql/fragment/form.pager.fragment'
-import { useFormDeleteMutation } from '../../../graphql/mutation/form.delete.mutation'
-import { useFormPagerQuery } from '../../../graphql/query/form.pager.query'
-import styled from 'styled-components'
+  CopyOutlined,
+  EyeOutlined,
+  EllipsisOutlined,
+  PlusOutlined,
+  UpOutlined,
+  DownOutlined,
+  SearchOutlined,
+} from '@ant-design/icons';
+import { AdminStructure } from 'components/admin/structure';
+import {
+  Avatar,
+  IconWrapper,
+  EmptyIcon,
+  EmptyTitle,
+  EmptyDescription,
+  AdminCard,
+  AdminScrollArea,
+} from 'components/admin/ui';
+import { useWindowSize } from '../../../components/use.window.size';
+import { FormPagerFragment } from '../../../graphql/fragment/form.pager.fragment';
+import { useFormDeleteMutation } from '../../../graphql/mutation/form.delete.mutation';
+import { useFormPagerQuery } from '../../../graphql/query/form.pager.query';
+import { NextPage } from 'next';
+import React, { useState, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
+import styled from 'styled-components';
+import {
+  Button,
+  Input,
+  Select,
+  Badge,
+  Table,
+  Dropdown,
+  ToastProvider,
+  useToast,
+} from 'src/components/primitives';
 
 const FormContainer = styled.div`
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
-  padding: 32px 24px;
-  position: relative;
-`
+`;
 
 const HeaderBar = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 32px;
+  gap: 24px;
+  margin-bottom: 24px;
   flex-wrap: wrap;
-  gap: 16px;
-`
+`;
 
 const HeaderTitle = styled.div`
   display: flex;
   align-items: center;
-  gap: 12px;
-`
+  gap: 14px;
+`;
 
-const HeaderIcon = styled.div`
-  width: 44px;
-  height: 44px;
-  border-radius: 12px;
-  background: linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 20px;
-  color: #fff;
-  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.35);
-`
+const HeaderIconWrapper = styled(IconWrapper)`
+  background: linear-gradient(135deg, var(--omf-color-primary-600) 0%, var(--omf-color-primary-700) 100%);
+  box-shadow: 0 4px 16px rgba(16, 185, 129, 0.35);
+`;
 
 const HeaderTitleText = styled.div`
   h2 {
-    font-size: 22px;
-    font-weight: 900;
-    color: #0f172a;
     margin: 0 0 4px;
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--omf-color-text-primary);
+    letter-spacing: -0.02em;
   }
   span {
-    font-size: 13px;
-    color: #64748b;
+    font-size: 14px;
+    color: var(--omf-color-text-muted);
   }
-`
+`;
 
 const ActionsGroup = styled.div`
   display: flex;
   align-items: center;
   gap: 12px;
-`
+  flex-wrap: wrap;
+`;
 
-const TableWrapper = styled.div`
-  background: #fff;
-  border-radius: 16px;
-  border: 1px solid var(--omf-border);
-  box-shadow: var(--omf-shadow-sm);
+const TableWrapper = styled(AdminCard)`
+  padding: 0;
   overflow: hidden;
-`
+`;
 
-const EmptyState = styled.div`
+const TableToolbar = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--omf-color-border-muted);
+  flex-wrap: wrap;
+
+  @media (max-width: 639px) {
+    flex-direction: column;
+    align-items: stretch;
+  }
+`;
+
+const ToolbarLeft = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+`;
+
+const ToolbarRight = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 12px;
+`;
+
+const SearchWrapper = styled.div`
+  position: relative;
+`;
+
+const SearchIcon = styled.div`
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--omf-color-text-muted);
+  font-size: 16px;
+  pointer-events: none;
+  z-index: 1;
+`;
+
+const EmptyStateWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   padding: 80px 24px;
   text-align: center;
-  color: #64748b;
-`
+  color: var(--omf-color-text-secondary);
+`;
 
-const EmptyIcon = styled.div`
-  width: 64px;
-  height: 64px;
-  border-radius: 16px;
-  background: #f1f5f9;
+const EmptyIconWrapper = styled(EmptyIcon)`
+  background: var(--omf-color-primary-50);
+  color: var(--omf-color-primary-600);
+`;
+
+const EmptyTitleText = styled(EmptyTitle)``;
+
+const EmptyDescText = styled(EmptyDescription)``;
+
+const FormTitleCell = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 12px;
+`;
+
+const FormAvatar = styled(Avatar)`
+  background: var(--omf-color-primary-100);
+  color: var(--omf-color-primary-700);
+  font-weight: 900;
+`;
+
+const FormTitleText = styled.span`
+  font-weight: 700;
+  color: var(--omf-color-text-primary);
+  font-size: 14px;
+`;
+
+const AdminNameCell = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+`;
+
+const AdminAvatar = styled(Avatar)`
+  background: var(--omf-color-slate-100);
+  color: var(--omf-color-slate-700);
+`;
+
+const AdminNameLink = styled.a`
+  color: var(--omf-color-primary-600);
+  font-weight: 600;
+  text-decoration: none;
+  font-size: 13px;
+  transition: var(--omf-transition-fast);
+
+  &:hover {
+    color: var(--omf-color-primary-700);
+    text-decoration: underline;
+  }
+`;
+
+const LanguageTag = styled(Badge)`
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+`;
+
+const ActionButton = styled.button<{ $primary?: boolean }>`
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 32px;
-  color: #8B5CF6;
-  margin-bottom: 16px;
-`
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: var(--omf-radius-md);
+  background: ${({ $primary }) => ($primary ? 'var(--omf-color-primary-600)' : 'var(--omf-color-surface-secondary)')};
+  color: ${({ $primary }) => ($primary ? 'white' : 'var(--omf-color-text-secondary)')};
+  cursor: pointer;
+  transition: var(--omf-transition);
 
-const EmptyTitle = styled.h3`
-  font-size: 18px;
-  font-weight: 800;
-  color: #0f172a;
-  margin: 0 0 8px;
-`
+  &:hover {
+    background: ${({ $primary }) => ($primary ? 'var(--omf-color-primary-700)' : 'var(--omf-color-border-muted)')};
+    color: ${({ $primary }) => ($primary ? 'white' : 'var(--omf-color-text-primary)')};
+  }
+`;
 
-const EmptyDesc = styled.p`
-  font-size: 14px;
-  color: #64748b;
-  margin: 0 0 24px;
-`
+const ViewButton = styled.a`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--omf-radius-md);
+  background: var(--omf-color-surface-secondary);
+  color: var(--omf-color-text-secondary);
+  text-decoration: none;
+  transition: var(--omf-transition);
 
-const Index: NextPage = () => {
-  const { t } = useTranslation()
-  const { width } = useWindowSize()
-  const [pagination, setPagination] = useState<PaginationProps>({
+  &:hover {
+    background: var(--omf-color-primary-50);
+    color: var(--omf-color-primary-700);
+  }
+`;
+
+const WarningButton = styled.a`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--omf-radius-md);
+  background: #fffbeb;
+  color: #f59e0b;
+  text-decoration: none;
+  transition: var(--omf-transition);
+
+  &:hover {
+    background: #fef3c7;
+    color: #d97706;
+  }
+`;
+
+const TableContainer = styled(AdminScrollArea)`
+  max-height: 70vh;
+`;
+
+const FormsPage: NextPage = () => {
+  const { t } = useTranslation();
+  const { width } = useWindowSize();
+  const [pagination, setPagination] = useState<{
+    pageSize: number;
+    current: number;
+    total: number;
+  }>({
     pageSize: 25,
-  })
-  const [entries, setEntries] = useState<FormPagerFragment[]>()
-  const { loading, refetch, error } = useFormPagerQuery({
+    current: 1,
+    total: 0,
+  });
+  const [entries, setEntries] = useState<FormPagerFragment[]>();
+  const [searchQuery, setSearchQuery] = useState('');
+  const [statusFilter, setStatusFilter] = useState<'all' | 'live' | 'draft'>('all');
+  const { loading /*, refetch */ } = useFormPagerQuery({
     variables: {
       limit: pagination.pageSize,
       start: Math.max(0, pagination.current - 1) * pagination.pageSize || 0,
@@ -134,210 +287,350 @@ const Index: NextPage = () => {
       setPagination({
         ...pagination,
         total: pager.total,
-      })
-      setEntries(pager.entries)
+      });
+      setEntries(pager.entries);
     },
-  })
-  const [executeDelete] = useFormDeleteMutation()
+  });
+  const [executeDelete] = useFormDeleteMutation();
+  const { addToast } = useToast();
+
+  const filteredEntries = useMemo(() => {
+    if (!entries) return [];
+    return entries.filter((entry) => {
+      const matchesSearch = !searchQuery ||
+        entry.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        entry.admin?.username?.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesStatus = statusFilter === 'all' ||
+        (statusFilter === 'live' && entry.isLive) ||
+        (statusFilter === 'draft' && !entry.isLive);
+      return matchesSearch && matchesStatus;
+    });
+  }, [
+    entries, searchQuery, statusFilter,
+  ]);
 
   const deleteForm = async (id: string) => {
     try {
       await executeDelete({
-        variables: {
-          id,
-        },
-      })
-      const next = entries.filter((entry) => entry.id !== id)
-      if (next.length === 0) {
-        setPagination({ ...pagination, current: 1 })
+        variables: { id },
+      });
+      const next = entries?.filter((entry) => entry.id !== id) || [];
+      if (next.length === 0 && pagination.current > 1) {
+        setPagination({ ...pagination, current: pagination.current - 1 });
       } else {
-        setEntries(next)
+        setEntries(next);
       }
-
-      await message.success(t('form:deleted'))
+      addToast({ type: 'success', title: t('form:deleted') });
     } catch (e) {
-      await message.error(t('form:deleteError'))
+      addToast({ type: 'error', title: t('form:deleteError') });
     }
-  }
+  };
 
-  const columns: ColumnsType<FormPagerFragment> = [
+  const duplicateForm = (id: string) => {
+    try {
+      // TODO: implement duplicate mutation
+      addToast({ type: 'success', title: t('form:duplicated') });
+    } catch (e) {
+      addToast({ type: 'error', title: t('form:duplicateError') });
+    }
+  };
+
+  const columns = useMemo(() => [
     {
-      title: t('form:row.isLive'),
-      dataIndex: 'isLive',
-      render(live: boolean) {
-        return (
-          <Tag color={live ? 'green' : 'default'} style={{ fontWeight: 700 }}>
-            {live ? t('form:row.isLive') : 'Rascunho'}
-          </Tag>
-        )
-      },
-      responsive: ['md'],
+      key: 'isLive',
+      header: t('form:row.isLive'),
+      width: '100px',
+      accessor: (row: FormPagerFragment) => (
+        <Badge variant={row.isLive ? 'success' : 'draft'} size="sm">
+          {row.isLive ? t('form:live') : t('form:draft')}
+        </Badge>
+      ),
     },
     {
-      title: t('form:row.title'),
-      dataIndex: 'title',
-      render(text: string, record: FormPagerFragment) {
-        return (
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <div style={{ width: 40, height: 40, borderRadius: 10, background: '#f0f9ff', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#8B5CF6', fontWeight: 900 }}>
-              {text.charAt(0).toUpperCase()}
-            </div>
-            <span style={{ fontWeight: 700, color: '#0f172a' }}>{text}</span>
-          </div>
-        )
-      },
+      key: 'title',
+      header: t('form:row.title'),
+      accessor: (row: FormPagerFragment) => (
+        <FormTitleCell>
+          <FormAvatar $name={row.title} $size="md" />
+          <FormTitleText>{row.title}</FormTitleText>
+        </FormTitleCell>
+      ),
     },
     {
-      title: t('form:row.admin'),
-      dataIndex: 'admin',
-      render(_, { admin: user }) {
-        if (!user) {
-          return <Tag color={'default'} title={t('form:row.adminMissing')}>{t('form:row.adminMissing')}</Tag>
+      key: 'admin',
+      header: t('form:row.admin'),
+      width: '200px',
+      accessor: (row: FormPagerFragment) => {
+        if (!row.admin) {
+          return (
+            <Badge variant="default" size="sm">
+              {t('form:row.adminMissing')}
+            </Badge>
+          );
         }
+        return (
+          <AdminNameCell>
+            <AdminAvatar $name={row.admin.username} $size="sm" />
+            <AdminNameLink href={`/admin/users/${row.admin.id}`} target="_blank" rel="noopener">
+              {row.admin.username}
+            </AdminNameLink>
+          </AdminNameCell>
+        );
+      },
+    },
+    {
+      key: 'language',
+      header: t('form:row.language'),
+      width: '120px',
+      accessor: (row: FormPagerFragment) => (
+        <LanguageTag variant="default" size="sm">
+          {t(`language:${row.language}`)}
+        </LanguageTag>
+      ),
+    },
+    {
+      key: 'created',
+      header: t('form:row.created'),
+      width: '160px',
+      accessor: (row: FormPagerFragment) => new Date(row.created).toLocaleDateString('pt-BR', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+      }),
+    },
+    {
+      key: 'lastModified',
+      header: t('form:row.lastModified'),
+      width: '160px',
+      accessor: (row: FormPagerFragment) => {
+        const diff = Date.now() - new Date(row.lastModified).getTime();
+        const seconds = Math.floor(diff / 1000);
+        const minutes = Math.floor(seconds / 60);
+        const hours = Math.floor(minutes / 60);
+        const days = Math.floor(hours / 24);
+
+        if (days > 0) return `${days}d`;
+        if (hours > 0) return `${hours}h`;
+        if (minutes > 0) return `${minutes}m`;
+        return `${seconds}s`;
+      },
+    },
+    {
+      key: 'actions',
+      header: t('form:row.actions'),
+      width: '200px',
+      align: 'center' as const,
+      accessor: (row: FormPagerFragment) => {
+        const menuItems = [
+          { label: t('form:edit'), value: 'edit', icon: <EditOutlined /> },
+          { label: t('form:submissions'), value: 'submissions', icon: <UnorderedListOutlined /> },
+          { divider: true },
+          { label: t('form:duplicate'), value: 'duplicate', icon: <CopyOutlined /> },
+          ...(row.isLive ? [{ label: t('form:viewPublic'), value: 'view', icon: <EyeOutlined /> }] : []),
+          { divider: true },
+          { label: t('form:delete'), value: 'delete', icon: <DeleteOutlined />, danger: true },
+        ];
 
         return (
-          <Tooltip title={user.email}>
-            <a href={`/admin/users/${user.id}`} style={{ textDecoration: 'none', color: '#8B5CF6', fontWeight: 700 }}>
-              {user.username}
-            </a>
-          </Tooltip>
-        )
-      },
-      responsive: ['lg'],
-    },
-    {
-      title: t('form:row.language'),
-      dataIndex: 'language',
-      render(lang: string) {
-        return (
-          <Tag color='default' style={{ fontSize: 12 }}>
-            {t(`language:${lang}`)}
-          </Tag>
-        )
-      },
-      responsive: ['lg'],
-    },
-    {
-      title: t('form:row.created'),
-      dataIndex: 'created',
-      render(date: string) {
-        return <DateTime date={date} />
-      },
-      responsive: ['lg'],
-    },
-    {
-      title: t('form:row.lastModified'),
-      dataIndex: 'lastModified',
-      render(date: string) {
-        return <TimeAgo date={date} />
-      },
-      responsive: ['md'],
-    },
-    {
-      title: t('form:row.menu'),
-      align: 'right',
-      render(_, row) {
-        return (
-          <Space direction={width < 600 ? 'vertical' : 'horizontal'} style={{ gap: 8 }}>
-            <a href={`/admin/forms/${row.id}/submissions`} style={{ textDecoration: 'none' }}>
-              <Button ghost icon={<UnorderedListOutlined />} />
-            </a>
-
-            <a href={`/admin/forms/${row.id}`} style={{ textDecoration: 'none' }}>
-              <Button type='primary' icon={<EditOutlined />} />
-            </a>
-
-            <Popconfirm
-              title={t('form:confirmDelete')}
-              onConfirm={() => deleteForm(row.id)}
-              okText={t('form:deleteNow')}
-              okButtonProps={{ danger: true }}
-            >
-              <Button danger icon={<DeleteOutlined />} />
-            </Popconfirm>
-
+          <div style={{ display: 'flex', gap: '8px', flexDirection: width < 600 ? 'column' : 'row' }}>
             {row.isLive && (
-              <a href={`/form/${row.id}`} target={'_blank'} rel={'noreferrer'} style={{ textDecoration: 'none' }}>
-                <Button ghost icon={<GlobalOutlined />} />
-              </a>
+              <ViewButton
+                href={`/form/${row.id}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                data-tooltip={t('form:viewPublic')}
+              >
+                <GlobalOutlined />
+              </ViewButton>
             )}
-
             {!row.isLive && (
-              <Tooltip title={'Não acessível publicamente!'} placement={'left'}>
-                <a href={`/form/${row.id}`} target={'_blank'} rel={'noreferrer'} style={{ textDecoration: 'none' }}>
-                  <Button ghost icon={<WarningOutlined />} />
-                </a>
-              </Tooltip>
+              <WarningButton
+                href={`/form/${row.id}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                data-tooltip={t('form:notAccessible')}
+              >
+                <WarningOutlined />
+              </WarningButton>
             )}
-
-          </Space>
-        )
+            <Dropdown
+              trigger={
+                <ActionButton>
+                  <EllipsisOutlined />
+                </ActionButton>
+              }
+              items={menuItems}
+              onSelect={(value) => {
+                switch (value) {
+                  case 'edit':
+                    window.location.href = `/admin/forms/${row.id}`;
+                    break;
+                  case 'submissions':
+                    window.location.href = `/admin/forms/${row.id}/submissions`;
+                    break;
+                  case 'duplicate':
+                    void duplicateForm(row.id);
+                    break;
+                  case 'view':
+                    window.open(`/form/${row.id}`, '_blank');
+                    break;
+                  case 'delete':
+                    void deleteForm(row.id);
+                    break;
+                }
+              }}
+            />
+          </div>
+        );
       },
     },
-  ]
-
-  if (!entries || entries.length === 0) {
-    return (
-      <FormContainer>
-        <HeaderBar>
-          <HeaderTitle>
-            <HeaderIcon>📝</HeaderIcon>
-            <HeaderTitleText>
-              <h2>{t('admin:forms')}</h2>
-              <span>Gerencie todos os seus formulários em um só lugar.</span>
-            </HeaderTitleText>
-          </HeaderTitle>
-          <ActionsGroup>
-            <a href={'/admin/forms/create'}>
-              <Button type={'primary'}>{t('form:new')}</Button>
-            </a>
-          </ActionsGroup>
-        </HeaderBar>
-        <EmptyState>
-          <EmptyIcon>📭</EmptyIcon>
-          <EmptyTitle>Nenhum formulário ainda</EmptyTitle>
-          <EmptyDesc>Comece criando seu primeiro formulário. É rápido e fácil.</EmptyDesc>
-          <a href={'/admin/forms/create'}>
-            <Button type={'primary'}>{t('form:createNow')}</Button>
-          </a>
-        </EmptyState>
-      </FormContainer>
-    )
-  }
+  ], [
+    t, width, entries, pagination.current, deleteForm, duplicateForm, addToast,
+  ]);
 
   return (
-    <FormContainer>
-      <HeaderBar>
-        <HeaderTitle>
-          <HeaderIcon>📝</HeaderIcon>
-          <HeaderTitleText>
-            <h2>{t('admin:forms')}</h2>
-            <span>Gerencie todos os seus formulários em um só lugar.</span>
-          </HeaderTitleText>
-        </HeaderTitle>
-        <ActionsGroup>
-          <a href={'/admin/forms/create'}>
-            <Button type={'primary'}>{t('form:new')}</Button>
-          </a>
-        </ActionsGroup>
-      </HeaderBar>
-      <TableWrapper>
-        <Table
-          columns={columns}
-          dataSource={entries}
-          rowKey={'id'}
-          pagination={pagination}
-          onChange={async (next) => {
-            setPagination(next)
-            await refetch()
-          }}
-          size={'middle'}
-          rowClassName={() => 'ant-table-row'}
-          locale={{ emptyText: '' }}
-        />
-      </TableWrapper>
-    </FormContainer>
-  )
-}
+    <ToastProvider>
+      <AdminStructure
+        title={t('admin:forms')}
+        subTitle={t('admin:formsSubtitle')}
+        selected="forms"
+        breadcrumbs={[{ name: t('admin:home'), href: '/admin' }, { name: t('admin:forms') }]}
+      >
+        <FormContainer>
+          <HeaderBar>
+            <HeaderTitle>
+              <HeaderIconWrapper $size="lg">
+                <FileTextOutlined />
+              </HeaderIconWrapper>
+              <HeaderTitleText>
+                <h2>{t('admin:forms')}</h2>
+                <span>{t('admin:formsSubtitle')}</span>
+              </HeaderTitleText>
+            </HeaderTitle>
+            <ActionsGroup>
+              <Button as="a" href="/admin/forms/create" variant="primary" leftIcon={<PlusOutlined />}>
+                {t('form:new')}
+              </Button>
+            </ActionsGroup>
+          </HeaderBar>
 
-export default withAuth(Index, ['admin'])
+          <TableWrapper>
+            <TableToolbar>
+              <ToolbarLeft>
+                <SearchWrapper>
+                  <SearchIcon><SearchOutlined /></SearchIcon>
+                  <Input
+                    placeholder={t('admin:searchForms')}
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    leftIcon={<SearchOutlined />}
+                    fullWidth={false}
+                    style={{ width: 280 }}
+                  />
+                </SearchWrapper>
+                <Select
+                  value={statusFilter}
+                  onChange={(e) => setStatusFilter(e.target.value as 'all' | 'live' | 'draft')}
+                  fullWidth={false}
+                  style={{ width: 180, minWidth: 160 }}
+                  placeholder={t('admin:allStatus')}
+                  options={[
+                    { value: 'all', label: t('admin:allStatus') },
+                    { value: 'live', label: t('form:live') },
+                    { value: 'draft', label: t('form:draft') },
+                  ]}
+                />
+              </ToolbarLeft>
+              <ToolbarRight>
+                <span style={{ fontSize: 13, color: 'var(--omf-color-text-muted)' }}>
+                  {t('admin:showing', { count: filteredEntries.length, total: pagination.total || 0 })}
+                </span>
+              </ToolbarRight>
+            </TableToolbar>
+
+            {loading ? (
+              <TableContainer>
+                <Table
+                  columns={columns}
+                  data={Array(5).fill(null).map((_, i) => ({ id: `skeleton-${i}` }))}
+                  keyAccessor="id"
+                  loading={true}
+                  compact
+                />
+              </TableContainer>
+            ) : filteredEntries.length === 0 ? (
+              <EmptyStateWrapper>
+                <EmptyIconWrapper><InboxOutlined /></EmptyIconWrapper>
+                <EmptyTitleText>{searchQuery ? t('admin:noResults') : t('admin:noForms')}</EmptyTitleText>
+                <EmptyDescText>
+                  {searchQuery
+                    ? t('admin:noResultsDesc')
+                    : t('admin:noFormsDesc')}
+                </EmptyDescText>
+                {!searchQuery && (
+                  <Button variant="primary" leftIcon={<PlusOutlined />} onClick={() => window.location.href = '/admin/forms/create'}>
+                    {t('form:createNow')}
+                  </Button>
+                )}
+              </EmptyStateWrapper>
+            ) : (
+              <>
+                <TableContainer>
+                  <Table
+                    columns={columns}
+                    data={filteredEntries}
+                    keyAccessor="id"
+                    compact
+                  />
+                </TableContainer>
+                {pagination.total && pagination.total > pagination.pageSize && (
+                  <div style={{ padding: '16px 24px', borderTop: '1px solid var(--omf-color-border-muted)', background: 'var(--omf-color-surface-secondary)' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '16px', flexWrap: 'wrap' }}>
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        leftIcon={<UpOutlined />}
+                        onClick={() => {
+                          setPagination({
+                            ...pagination,
+                            current: pagination.current - 1,
+                          });
+                        }}
+                        disabled={pagination.current <= 1}
+                      />
+                      <span style={{ fontWeight: 600, color: 'var(--omf-color-text-primary)' }}>
+                        {t('admin:page', {
+                          current: pagination.current,
+                          total: Math.ceil((pagination.total || 0) / pagination.pageSize),
+                        })}
+                      </span>
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        rightIcon={<DownOutlined />}
+                        onClick={() => {
+                          setPagination({
+                            ...pagination,
+                            current: pagination.current + 1,
+                          });
+                        }}
+                        disabled={
+                          pagination.current >=
+                          Math.ceil((pagination.total || 0) / pagination.pageSize)
+                        }
+                      />
+                    </div>
+                  </div>
+                )}
+              </>
+            )}
+          </TableWrapper>
+        </FormContainer>
+      </AdminStructure>
+    </ToastProvider>
+  );
+};
+
+export default FormsPage;

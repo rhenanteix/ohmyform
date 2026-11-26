@@ -44,7 +44,7 @@ export const Field: React.FC<Props> = ({ field, design, focus, ...props }) => {
           flex: 1,
           display: 'flex',
           flexDirection: 'column',
-          padding: 32,
+          padding: 'clamp(16px, 4vw, 32px)',
           justifyContent: 'flex-end',
         }}
       >

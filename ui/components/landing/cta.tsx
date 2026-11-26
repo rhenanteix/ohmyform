@@ -15,8 +15,8 @@ export const CTA = () => {
             </CTASub>
           </CTAHead>
           <CTAActions>
-            <Button size="lg">Começar de graça <FiStar size={20} /></Button>
-            <Button variant="outline" size="lg">Ver modelos</Button>
+            <Button as="a" href="/register" size="lg">Começar de graça <FiStar size={20} /></Button>
+            <Button as="a" href="#templates" variant="outline" size="lg">Ver modelos</Button>
           </CTAActions>
         </CTACard>
       </Container>
@@ -42,7 +42,7 @@ const CTAHead = styled.div`
 
 const CTATitle = styled.h2`
   font-size: 34px;
-  font-weight: 900;
+  font-weight: 700;
   line-height: 1.15;
   margin: 0 0 14px;
   letter-spacing: -0.02em;
@@ -61,6 +61,9 @@ const CTAActions = styled.div`
   gap: 12px;
   justify-content: center;
   flex-wrap: wrap;
+  a:first-child { background: #fff; color: #176b58; }
+  a:last-child { color: #fff; border-color: #90b8a9; }
+  a:last-child:hover { background: #fff; color: #176b58; }
 `
 
 export default CTA

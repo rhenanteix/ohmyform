@@ -87,8 +87,8 @@ const FeatureIcon = styled.div`
   width: 48px;
   height: 48px;
   border-radius: 14px;
-  background: linear-gradient(135deg, #f0f9ff 0%, #e0e7ff 100%);
-  color: #8B5CF6;
+  background: linear-gradient(135deg, #edf5ef 0%, #e0e7ff 100%);
+  color: #176b58;
 `
 
 const FeatureTitle = styled.h3`

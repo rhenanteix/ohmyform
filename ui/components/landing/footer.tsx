@@ -108,7 +108,7 @@ const Logo = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.35);
+  box-shadow: 0 4px 12px rgba(23, 107, 88, 0.35);
 `
 
 const FooterDesc = styled.p`
@@ -146,7 +146,7 @@ const FooterLink = styled.a`
   transition: var(--omf-transition);
 
   &:hover {
-    color: #8B5CF6;
+    color: #176b58;
   }
 `
 
@@ -182,7 +182,7 @@ const SocialLink = styled.a`
   transition: var(--omf-transition);
 
   &:hover {
-    background: #8B5CF6;
+    background: #176b58;
     color: #fff;
     transform: translateY(-2px);
   }

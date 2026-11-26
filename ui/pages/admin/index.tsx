@@ -1,273 +1,379 @@
-import { useQuery } from '@apollo/client'
-import { FiArrowRight, FiUsers, FiActivity, FiFileText } from 'react-icons/fi'
-import styled from 'styled-components'
 import React from 'react'
-import { useTranslation } from 'react-i18next'
-import { Card, Grid } from '../../components/ui'
+import { useQuery } from '@apollo/client'
+import { Alert, Skeleton } from 'antd'
+import {
+  FiFileText,
+  FiUsers,
+  FiArrowRight,
+  FiPlus,
+  FiMessageSquare,
+  FiArrowUpRight,
+} from 'react-icons/fi'
+import styled from 'styled-components'
+import { AdminStructure } from '../../components/admin/structure'
 import { withAuth } from '../../components/with.auth'
 import {
   ADMIN_STATISTIC_QUERY,
   AdminStatisticQueryData,
-  AdminStatisticQueryVariables,
 } from '../../graphql/query/admin.statistic.query'
+import { useFormPagerQuery } from '../../graphql/query/form.pager.query'
 
-const DashboardContainer = styled.div`
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 32px 24px;
-  position: relative;
-`
-
-const HeaderSection = styled.div`
-  margin-bottom: 32px;
-`
-
-const WelcomeText = styled.h1`
-  font-size: 32px;
-  font-weight: 900;
-  color: #0f172a;
-  margin: 0 0 8px;
-  letter-spacing: -0.02em;
-`
-
-const SubtitleText = styled.p`
-  font-size: 16px;
-  color: #64748b;
-  margin: 0;
-  line-height: 1.5;
-`
-
-const StatsGrid = styled(Grid)`
-  gap: 20px;
-
-  @media (min-width: 768px) {
-    grid-template-columns: repeat(3, 1fr);
-  }
-`
-
-const StatCard = styled(Card)<{ color: string; iconColor: string }>`
-  border: none;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  box-shadow: var(--omf-shadow-sm);
-  background: linear-gradient(135deg, #ffffff 0%, #faf5ff 100%);
-  border: 1px solid var(--omf-border);
-  transition: var(--omf-transition);
-
-  &:hover {
-    transform: translateY(-4px);
-    box-shadow: var(--omf-shadow);
-    border-color: transparent;
-  }
-
-  .stat-header {
+const DashboardView = styled.div`
+  .welcome {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
   }
-
-  .stat-icon {
-    width: 40px;
-    height: 40px;
+  .overline {
+    color: var(--omf-color-text-muted);
+    font-size: 11px;
+    letter-spacing: 1.4px;
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+  h1 {
+    font-size: clamp(26px, 3vw, 34px);
+    font-weight: 600;
+    letter-spacing: -1.2px;
+    color: var(--omf-color-text-primary);
+    margin: 0 0 8px;
+  }
+  p {
+    color: var(--omf-color-text-secondary);
+    font-size: 14px;
+    margin: 0;
+    line-height: 1.7;
+  }
+  .primary-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 13px 18px;
+    background: #245d4c;
+    color: white;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 13px;
+  }
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+    margin-bottom: 30px;
+  }
+  .stat {
+    border: 1px solid var(--omf-color-border);
     border-radius: 12px;
-    background: ${({ iconColor }) => iconColor + '1a'};
-    color: ${({ iconColor }) => iconColor};
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 18px;
+    background: var(--omf-color-surface);
+    padding: 23px;
   }
-
   .stat-label {
-    font-size: 12px;
-    font-weight: 700;
-    color: #64748b;
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
-    margin-top: 4px;
-  }
-
-  .stat-value {
-    font-size: 34px;
-    font-weight: 900;
-    color: #0f172a;
-    line-height: 1;
-  }
-`
-
-const ActionsSection = styled.div`
-  margin-top: 40px;
-`
-
-const ActionsTitle = styled.h3`
-  font-size: 18px;
-  font-weight: 900;
-  color: #0f172a;
-  margin: 0 0 16px;
-`
-
-const ActionsGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 16px;
-`
-
-const ActionCard = styled(Card)<{ as?: string; href?: string }>`
-  border: none;
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 16px 20px;
-  box-shadow: var(--omf-shadow-sm);
-  background: #fff;
-  border: 1px solid var(--omf-border);
-  transition: var(--omf-transition);
-  cursor: pointer;
-  text-decoration: none;
-  color: inherit;
-
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--omf-shadow);
-    border-color: #8B5CF6;
-  }
-
-  .action-icon {
-    width: 40px;
-    height: 40px;
-    border-radius: 10px;
-    background: #f0f9ff;
-    color: #8B5CF6;
     display: flex;
     align-items: center;
-    justify-content: center;
-    font-size: 18px;
+    justify-content: space-between;
+    gap: 10px;
+    color: var(--omf-color-text-secondary);
+    font-size: 12px;
+  }
+  .stat-label svg {
+    width: 34px;
+    height: 34px;
+    padding: 8px;
+    border-radius: 9px;
+    background: var(--omf-color-primary-50);
+    color: var(--omf-color-primary-700);
+  }
+  .stat strong {
+    display: block;
+    margin-top: 12px;
+    font-size: 34px;
+    letter-spacing: -1px;
+    font-weight: 600;
+    line-height: 1.2;
+  }
+  .workspace {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 300px;
+    gap: 24px;
+    align-items: start;
+  }
+  .panel {
+    border: 1px solid var(--omf-color-border);
+    background: var(--omf-color-surface);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .panel-heading {
+    padding: 22px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    border-bottom: 1px solid var(--omf-color-border);
+  }
+  h2 {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0;
+    color: var(--omf-color-text-primary);
+  }
+  .panel-heading a {
+    font-size: 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .form-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--omf-color-border-muted);
+    color: var(--omf-color-text-primary);
+    transition: background 0.2s;
+  }
+  .form-row:hover {
+    background: var(--omf-color-surface-secondary);
+  }
+  .form-icon {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 44px;
+    background: var(--omf-color-primary-50);
+    border-radius: 8px;
+    color: var(--omf-color-primary-700);
     flex-shrink: 0;
   }
-
-  .action-title {
-    font-size: 15px;
-    font-weight: 800;
-    color: #0f172a;
+  .form-info {
+    flex: 1;
+    min-width: 0;
   }
-
-  .action-desc {
+  .form-info strong {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
     font-size: 13px;
-    color: #64748b;
-    margin-top: 2px;
+    font-weight: 500;
+  }
+  .form-info small {
+    color: var(--omf-color-text-muted);
+    font-size: 11px;
+  }
+  .status {
+    font-size: 10px;
+    color: var(--omf-color-text-secondary);
+    background: var(--omf-color-surface-secondary);
+    padding: 4px 8px;
+    border-radius: 20px;
+  }
+  .status.live {
+    color: var(--omf-color-primary-700);
+    background: var(--omf-color-primary-50);
+  }
+  .empty {
+    padding: 56px 24px;
+    text-align: center;
+  }
+  .empty > svg {
+    font-size: 32px;
+    color: var(--omf-color-primary-600);
+    margin-bottom: 18px;
+  }
+  .empty h2 {
+    margin-bottom: 10px;
+  }
+  .empty p {
+    max-width: 320px;
+    margin: 0 auto 22px;
+    font-size: 13px;
+  }
+  .guide {
+    background: #eaf0e3;
+    border: 1px solid #dce5d4;
+    border-radius: 12px;
+    padding: 28px;
+    color: #233c35;
+  }
+  .guide h2 {
+    font-size: 25px;
+    letter-spacing: -0.8px;
+    line-height: 1.25;
+    color: #233c35;
+    margin: 20px 0 12px;
+  }
+  .guide p {
+    color: #657363;
+    font-size: 12px;
+  }
+  .guide > span {
+    font-size: 40px;
+    color: #708e5e;
+  }
+  .guide ol {
+    padding-left: 20px;
+    margin: 22px 0;
+    font-size: 12px;
+    line-height: 2.8;
+    color: #52664b;
+  }
+  .guide a {
+    color: #245d4c;
+    font-size: 12px;
+    font-weight: 600;
+    display: inline-flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .tip {
+    border-top: 1px solid #cdd9c5;
+    padding-top: 20px;
+    margin-top: 24px;
+  }
+  @media (max-width: 1100px) {
+    .workspace {
+      grid-template-columns: 1fr;
+    }
+    .guide {
+      max-width: none;
+    }
+  }
+  @media (max-width: 600px) {
+    .stats {
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+    .stat {
+      padding: 18px;
+    }
+    .stat strong {
+      font-size: 28px;
+    }
+    .panel-heading,
+    .form-row {
+      padding: 18px;
+    }
+    .status {
+      display: none;
+    }
   }
 `
-
-const stats = [
-  {
-    label: 'admin:totalForms',
-    key: 'forms.total',
-    color: '#8B5CF6',
-    iconColor: '#8B5CF6',
-    icon: <FiFileText size={18} />,
-  },
-  {
-    label: 'admin:totalUsers',
-    key: 'users.total',
-    color: '#EC4899',
-    iconColor: '#EC4899',
-    icon: <FiUsers size={18} />,
-  },
-  {
-    label: 'admin:totalSubmissions',
-    key: 'submissions.total',
-    color: '#F59E0B',
-    iconColor: '#F59E0B',
-    icon: <FiActivity size={18} />,
-  },
-]
-
-const Index = () => {
-  const { t } = useTranslation()
-  const { data } = useQuery<AdminStatisticQueryData, AdminStatisticQueryVariables>(
-    ADMIN_STATISTIC_QUERY
-  )
-
+const Dashboard = () => {
+  const { data, loading, error } = useQuery<AdminStatisticQueryData>(ADMIN_STATISTIC_QUERY)
+  const forms = useFormPagerQuery({ variables: { start: 0, limit: 5 } })
+  const stats = [
+    { label: 'Formulários criados', value: data?.forms.total, icon: <FiFileText /> },
+    { label: 'Respostas recebidas', value: data?.submissions.total, icon: <FiMessageSquare /> },
+    { label: 'Usuários na plataforma', value: data?.users.total, icon: <FiUsers /> },
+  ]
   return (
-    <DashboardContainer>
-      <HeaderSection>
-        <WelcomeText>{t('admin:welcome')}</WelcomeText>
-        <SubtitleText>
-          Acompanhe o que está acontecendo na sua plataforma em tempo real.
-        </SubtitleText>
-      </HeaderSection>
-
-      <StatsGrid>
-        {stats.map((s) => {
-          const value = data
-            ? (s.key.split('.').reduce((o: any, k: string): any => (o ? o[k] : undefined), data) as number)
-            : 0
-          return (
-            <StatCard
-              key={s.label}
-              color={s.color}
-              iconColor={s.color}
-              hover
-              padding="20px 24px"
-            >
-              <div className="stat-header">
-                <div>
-                  <span className="stat-label">{t(s.label)}</span>
-                  <div className="stat-value">{value}</div>
-                </div>
-                <div className="stat-icon">{s.icon}</div>
-              </div>
-            </StatCard>
-          )
-        })}
-      </StatsGrid>
-
-      <ActionsSection>
-        <ActionsTitle>Ações rápidas</ActionsTitle>
-        <ActionsGrid>
-          <ActionCard as="a" href="/admin/forms/create">
-            <div className="action-icon">+</div>
-            <div>
-              <div className="action-title">Criar formulário</div>
-              <div className="action-desc">Comece um novo formulário em poucos cliques</div>
-            </div>
-          </ActionCard>
-          <ActionCard as="a" href="/admin/forms">
-            <div className="action-icon">📋</div>
-            <div>
-              <div className="action-title">Meus formulários</div>
-              <div className="action-desc">Gerencie todos os seus formulários</div>
-            </div>
-          </ActionCard>
-          <ActionCard as="a" href="/admin/users">
-            <div className="action-icon">👥</div>
-            <div>
-              <div className="action-title">Usuários</div>
-              <div className="action-desc">Gerencie os usuários da plataforma</div>
-            </div>
-          </ActionCard>
-        </ActionsGrid>
-
-        <div style={{ marginTop: 24 }}>
-          <a
-            href="/admin/forms"
-            style={{
-              color: '#8B5CF6',
-              fontWeight: 700,
-              fontSize: 14,
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: 6,
-              textDecoration: 'none',
-            }}
-          >
-            Ver todos os formulários <FiArrowRight size={14} />
+    <AdminStructure selected="home" padded={false}>
+      <DashboardView>
+        <div className="welcome">
+          <div>
+            <div className="overline">SEU ESPAÇO DE TRABALHO</div>
+            <h1>Boas ideias começam aqui.</h1>
+            <p>Crie, compartilhe e acompanhe suas próximas conversas.</p>
+          </div>
+          <a className="primary-action" href="/admin/forms/create">
+            <FiPlus /> Criar formulário
           </a>
         </div>
-      </ActionsSection>
-    </DashboardContainer>
+        {error && (
+          <Alert
+            type="error"
+            showIcon
+            message="Não foi possível carregar os indicadores."
+            style={{ marginBottom: 20 }}
+          />
+        )}
+        <div className="stats">
+          {stats.map((stat) => (
+            <div className="stat" key={stat.label}>
+              <div className="stat-label">
+                {stat.label}
+                {stat.icon}
+              </div>
+              {loading ? (
+                <Skeleton.Input active size="small" style={{ marginTop: 12 }} />
+              ) : (
+                <strong>
+                  {stat.value === undefined ? '—' : stat.value.toLocaleString('pt-BR')}
+                </strong>
+              )}
+            </div>
+          ))}
+        </div>
+        <div className="workspace">
+          <section className="panel">
+            <div className="panel-heading">
+              <h2>Seus formulários</h2>
+              <a href="/admin/forms">
+                Ver todos <FiArrowRight />
+              </a>
+            </div>
+            {forms.loading ? (
+              <div style={{ padding: 24 }}>
+                <Skeleton active />
+              </div>
+            ) : forms.error ? (
+              <Alert type="error" message="Não foi possível carregar os formulários." />
+            ) : forms.data?.pager.entries.length ? (
+              forms.data.pager.entries.map((form) => (
+                <a className="form-row" href={`/admin/forms/${form.id}`} key={form.id}>
+                  <span className="form-icon">
+                    <FiFileText />
+                  </span>
+                  <span className="form-info">
+                    <strong>{form.title}</strong>
+                    <small>
+                      {form.language} · {new Date(form.created).toLocaleDateString('pt-BR')}
+                    </small>
+                  </span>
+                  <span className={`status ${form.isLive ? 'live' : ''}`}>
+                    {form.isLive ? 'Publicado' : 'Rascunho'}
+                  </span>
+                  <FiArrowUpRight />
+                </a>
+              ))
+            ) : (
+              <div className="empty">
+                <FiFileText />
+                <h2>Sua primeira ideia merece um formulário.</h2>
+                <p>Comece com uma pergunta e descubra o que as pessoas têm para contar.</p>
+                <a className="primary-action" href="/admin/forms/create">
+                  <FiPlus /> Criar primeiro formulário
+                </a>
+              </div>
+            )}
+          </section>
+          <aside className="guide">
+            <span aria-hidden="true">✳</span>
+            <h2>
+              Pequenas perguntas.
+              <br />
+              Grandes descobertas.
+            </h2>
+            <p>Um bom formulário é uma conversa. Vamos começar?</p>
+            <ol>
+              <li>Escolha o que você quer descobrir</li>
+              <li>Personalize as suas perguntas</li>
+              <li>Publique e compartilhe o link</li>
+            </ol>
+            <a href="/admin/forms/create">
+              Tirar uma ideia do papel <FiArrowRight />
+            </a>
+            <p className="tip">
+              Dica: perguntas curtas e claras tornam a experiência mais leve para quem responde.
+            </p>
+          </aside>
+        </div>
+      </DashboardView>
+    </AdminStructure>
   )
 }
-
-export default withAuth(Index, ['admin'])
+export default withAuth(Dashboard, ['admin'])

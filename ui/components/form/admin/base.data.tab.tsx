@@ -1,8 +1,9 @@
-import { Form, Input, Select, Switch, Tabs } from 'antd'
+import { Form, Tabs } from 'antd'
 import { TabPaneProps } from 'antd/lib/tabs'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { languages } from '../../../i18n'
+import { Input, Select, Switch } from 'src/components/primitives'
 
 export const BaseDataTab: React.FC<TabPaneProps> = (props) => {
   const { t } = useTranslation()
@@ -40,13 +41,12 @@ export const BaseDataTab: React.FC<TabPaneProps> = (props) => {
           },
         ]}
       >
-        <Select>
-          {languages.map((language) => (
-            <Select.Option value={language} key={language}>
-              {t(`language:${language}`)}
-            </Select.Option>
-          ))}
-        </Select>
+        <Select
+          options={languages.map((language) => ({
+            value: language,
+            label: t(`language:${language}`),
+          }))}
+        />
       </Form.Item>
 
       <Form.Item

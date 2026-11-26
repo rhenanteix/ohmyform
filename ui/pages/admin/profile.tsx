@@ -1,104 +1,109 @@
-import { Button, Divider, Form, Input, message, Select } from 'antd'
+import { NextPage } from 'next';
+import { useRouter } from 'next/router';
+import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { withAuth } from '../../components/with.auth';
+import { useProfileUpdateMutation } from '../../graphql/mutation/profile.update.mutation';
+import { useProfileQuery } from '../../graphql/query/admin.profile.query';
+import { languages } from '../../i18n';
+import { AdminStructure } from 'components/admin/structure';
+import {
+  Button,
+  Input,
+  Select,
+  Divider,
+  ToastProvider,
+  useToast,
+} from 'src/components/primitives';
+import { Form, Input as AntdInput } from 'antd'
 import { useForm } from 'antd/lib/form/Form'
-import { NextPage } from 'next'
-import { useRouter } from 'next/router'
-import React, { useState } from 'react'
-import { useTranslation } from 'react-i18next'
-import Structure from '../../components/structure'
-import { withAuth } from '../../components/with.auth'
-import { useProfileUpdateMutation } from '../../graphql/mutation/profile.update.mutation'
-import { useProfileQuery } from '../../graphql/query/admin.profile.query'
-import { languages } from '../../i18n'
-import styled from 'styled-components'
+import styled from 'styled-components';
 
 const ProfileContainer = styled.div`
   max-width: 800px;
   margin: 0 auto;
-  padding: 32px 24px;
-  position: relative;
-`
-
-const HeaderBar = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 32px;
-  flex-wrap: wrap;
-  gap: 16px;
-`
-
-const HeaderTitle = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 12px;
-`
-
-const HeaderIcon = styled.div`
-  width: 44px;
-  height: 44px;
-  border-radius: 12px;
-  background: linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 20px;
-  color: #fff;
-  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.35);
-`
-
-const HeaderTitleText = styled.div`
-  h2 {
-    font-size: 22px;
-    font-weight: 900;
-    color: #0f172a;
-    margin: 0 0 4px;
-  }
-  span {
-    font-size: 13px;
-    color: #64748b;
-  }
-`
+`;
 
 const FormCard = styled.div`
-  background: #fff;
-  border-radius: 16px;
-  border: 1px solid var(--omf-border);
-  box-shadow: var(--omf-shadow-sm);
-  padding: 32px;
-`
+  background: var(--omf-color-surface);
+  border-radius: var(--omf-radius-xl);
+  border: 1px solid var(--omf-color-border);
+  padding: var(--omf-spacing-6);
+`;
+
+const PageHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--omf-spacing-4);
+  margin-bottom: var(--omf-spacing-6);
+  flex-wrap: wrap;
+`;
+
+const PageHeaderContent = styled.div`
+  flex: 1;
+  min-width: 0;
+`;
+
+const PageHeaderTitle = styled.h1`
+  margin: 0;
+  font-size: var(--omf-typography-fontSize-2xl);
+  font-weight: var(--omf-typography-fontWeight-semibold);
+  color: var(--omf-colors-text-primary);
+`;
+
+const PageHeaderSubtitle = styled.p`
+  margin: var(--omf-spacing-1) 0 0;
+  font-size: var(--omf-typography-fontSize-md);
+  color: var(--omf-colors-text-secondary);
+  line-height: 1.5;
+`;
+
+const PageHeaderActions = styled.div`
+  display: flex;
+  align-items: center;
+  gap: var(--omf-spacing-3);
+  flex-shrink: 0;
+  flex-wrap: wrap;
+`;
+
+const Flex = styled.div`
+  display: flex;
+  justify-content: flex-end;
+`;
 
 interface FormData {
   user: {
-    id: string
-    username: string
-    email: string
-    language: string
-    firstName: string
-    lastName: string
-  }
-  password: string
-  confirm: string
+    id: string;
+    email: string;
+    language: string;
+    firstName: string;
+    lastName: string;
+  };
+  password: string;
+  confirm: string;
 }
 
 const Profile: NextPage = () => {
-  const { t } = useTranslation()
-  const [form] = useForm<FormData>()
-  const [saving, setSaving] = useState(false)
-  const router = useRouter()
+  const { t } = useTranslation();
+  const [form] = useForm<FormData>();
+  const [saving, setSaving] = useState(false);
+  const router = useRouter();
+  const { addToast } = useToast();
 
-  const { loading } = useProfileQuery({
+  useProfileQuery({
     onCompleted: (next) => {
-      form.setFieldsValue(next)
+      form.setFieldsValue(next);
     },
-    onError(e) {
-      void router.push('/')
+    onError(_e) {
+      void router.push('/');
     },
-  })
+  });
 
-  const [update] = useProfileUpdateMutation()
+  const [update] = useProfileUpdateMutation();
 
   const save = async (data: FormData) => {
-    setSaving(true)
+    setSaving(true);
 
     try {
       const next = (
@@ -110,161 +115,148 @@ const Profile: NextPage = () => {
             },
           },
         })
-      ).data
+      ).data;
 
-      form.setFieldsValue(next)
+      form.setFieldsValue(next);
 
-      await message.success(t('profile:updated'))
+      addToast({ type: 'success', title: t('profile:updated') });
     } catch (e) {
-      console.error('failed to save', e)
-      await message.error(t('profile:updateError'))
+      console.error('failed to save', e);
+      addToast({ type: 'error', title: t('profile:updateError') });
     }
 
-    setSaving(false)
-  }
+    setSaving(false);
+  };
 
   return (
-    <ProfileContainer>
-      <HeaderBar>
-        <HeaderTitle>
-          <HeaderIcon>👤</HeaderIcon>
-          <HeaderTitleText>
-            <h2>{t('admin:profile')}</h2>
-            <span>Gerencie suas informações pessoais e preferências.</span>
-          </HeaderTitleText>
-        </HeaderTitle>
-        <Button key={'save'} onClick={form.submit} type={'primary'} disabled={saving}>
-          {t('profile:updateNow')}
-        </Button>
-      </HeaderBar>
-      <FormCard>
-        <Structure
-          loading={loading || saving}
-          title={t('admin:profile')}
-          selected={'profile'}
-          breadcrumbs={[{ href: '/admin', name: t('admin:home') }]}
-          extra={[]}
-        >
-          <Form
-            form={form}
-            onFinish={save}
-            onFinishFailed={async () => {
-              await message.error(t('validation:mandatoryFieldsMissing'))
-            }}
-            labelCol={{
-              xs: { span: 24 },
-              sm: { span: 6 },
-            }}
-            wrapperCol={{
-              xs: { span: 24 },
-              sm: { span: 18 },
-            }}
-          >
-            <Form.Item noStyle name={['user', 'id']}>
-              <Input type={'hidden'} />
-            </Form.Item>
+    <ToastProvider>
+      <AdminStructure
+        title={t('admin:profile')}
+        subTitle={t('admin:profileSubtitle')}
+        selected="profile"
+        breadcrumbs={[{ name: t('admin:home'), href: '/admin' }, { name: t('admin:profile') }]}
+      >
+        <ProfileContainer>
+          <PageHeader>
+            <PageHeaderContent>
+              <PageHeaderTitle>{t('admin:profile')}</PageHeaderTitle>
+              <PageHeaderSubtitle>{t('admin:profileSubtitle')}</PageHeaderSubtitle>
+            </PageHeaderContent>
+            <PageHeaderActions>
+              <Button variant="primary" type="submit" form="profile-form" loading={saving} size="md">
+                {t('profile:updateNow')}
+              </Button>
+            </PageHeaderActions>
+          </PageHeader>
 
-            <Form.Item
-              label={t('profile:username')}
-              name={['user', 'username']}
-              rules={[
-                {
-                  required: true,
-                  message: t('validation:usernameRequired'),
-                },
-              ]}
+          <FormCard>
+            <Form
+              form={form}
+              onFinish={save}
+              onFinishFailed={() => {
+                addToast({ type: 'error', title: t('validation:mandatoryFieldsMissing') });
+              }}
+              labelCol={{
+                xs: { span: 24 },
+                sm: { span: 5 },
+              }}
+              wrapperCol={{
+                xs: { span: 24 },
+                sm: { span: 19 },
+              }}
+              layout="horizontal"
+              id="profile-form"
             >
-              <Input />
-            </Form.Item>
+              <Form.Item noStyle name={['user', 'id']}>
+                <Input disabled />
+              </Form.Item>
 
-            <Form.Item
-              label={t('profile:email')}
-              name={['user', 'email']}
-              rules={[
-                {
-                  required: true,
-                  message: t('validation:emailRequired'),
-                },
-                {
-                  type: 'email',
-                  message: t('validation:invalidEmail'),
-                },
-              ]}
-            >
-              <Input type={'email'} />
-            </Form.Item>
+              <Form.Item noStyle name={['user', 'email']}>
+                <Input disabled />
+              </Form.Item>
 
-            <Form.Item
-              label={t('profile:language')}
-              name={['user', 'language']}
-              rules={[
-                {
-                  required: true,
-                  message: t('validation:languageRequired'),
-                },
-              ]}
-            >
-              <Select>
-                {languages.map((language) => (
-                  <Select.Option value={language} key={language}>
-                    {t(`language:${language}`)}
-                  </Select.Option>
-                ))}
-              </Select>
-            </Form.Item>
+              <Form.Item
+                name={['user', 'language']}
+                label={t('profile:language')}
+                rules={[
+                  {
+                    required: true,
+                    message: t('validation:languageRequired'),
+                  },
+                ]}
+              >
+                <Select
+                  style={{ width: '100%', minWidth: 200 }}
+                  placeholder={t('admin:selectLanguage')}
+                  options={languages.map((language) => ({
+                    value: language,
+                    label: t(`language:${language}`),
+                  }))}
+                />
+              </Form.Item>
 
-            <Form.Item label={t('profile:firstName')} name={['user', 'firstName']}>
-              <Input />
-            </Form.Item>
+              <Form.Item label={t('profile:firstName')} name={['user', 'firstName']}>
+                <Input placeholder={t('profile:firstNamePlaceholder')} />
+              </Form.Item>
 
-            <Form.Item label={t('profile:lastName')} name={['user', 'lastName']}>
-              <Input />
-            </Form.Item>
+              <Form.Item label={t('profile:lastName')} name={['user', 'lastName']}>
+                <Input placeholder={t('profile:lastNamePlaceholder')} />
+              </Form.Item>
 
-            <Divider style={{ margin: '24px 0' }} />
+              <Divider style={{ margin: '24px 0' }} />
 
-            <Form.Item
-              name="password"
-              label={t('profile:password')}
-              rules={[
-                {
-                  min: 5,
-                  message: t('validation:passwordMinLength'),
-                },
-              ]}
-            >
-              <Input.Password />
-            </Form.Item>
+              <Form.Item
+                name="password"
+                label={t('profile:password')}
+                rules={[
+                  {
+                    min: 8,
+                    message: t('validation:passwordMinLength'),
+                  },
+                ]}
+              >
+                <AntdInput.Password placeholder={t('profile:passwordPlaceholder')} />
+              </Form.Item>
 
-            <Form.Item noStyle shouldUpdate>
-              {() => (
-                <Form.Item
-                  name="confirm"
-                  label={t('profile:confirmPassword')}
-                  rules={[
-                    {
-                      required: Boolean(form.getFieldValue('password')),
-                      message: t('validation:passwordConfirmRequired'),
+              <Form.Item<FormData>
+                name="confirm"
+                noStyle
+                shouldUpdate
+                label={t('profile:confirmPassword')}
+                rules={[
+                  {
+                    required: true,
+                    message: t('validation:confirmPasswordRequired'),
+                    validator(_rule, value, callback) {
+                      const getFieldValue = (name: string) => form.getFieldValue(name) as string;
+                      const password = getFieldValue('password');
+                      if (!password) {
+                        callback();
+                        return;
+                      }
+                      if (!value || password === value) {
+                        callback();
+                      } else {
+                        callback(t('validation:passwordConfirmMismatch'));
+                      }
                     },
-                    ({ getFieldValue }) => ({
-                      validator(_, value) {
-                        if (!value || getFieldValue('password') === value) {
-                          return Promise.resolve()
-                        }
-                        return Promise.reject(new Error(t('validation:passwordConfirmMismatch')))
-                      },
-                    }),
-                  ]}
-                >
-                  <Input.Password />
-                </Form.Item>
-              )}
-            </Form.Item>
-          </Form>
-        </Structure>
-      </FormCard>
-    </ProfileContainer>
-  )
-}
+                  },
+                ]}
+              >
+                <AntdInput.Password placeholder={t('profile:confirmPasswordPlaceholder')} />
+              </Form.Item>
 
-export default withAuth(Profile)
+              <Flex>
+                <Button type="submit" variant="primary" loading={saving} size="xl">
+                  {t('profile:updateNow')}
+                </Button>
+              </Flex>
+            </Form>
+          </FormCard>
+        </ProfileContainer>
+      </AdminStructure>
+    </ToastProvider>
+  );
+};
+
+export default withAuth(Profile);

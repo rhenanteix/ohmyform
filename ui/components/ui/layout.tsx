@@ -27,10 +27,10 @@ export const Badge = styled.span<{ variant?: 'primary' | 'success' | 'warning' |
   background: ${({ variant }) => {
     switch (variant) {
       case 'success': return '#10B981'
-      case 'warning': return '#F59E0B'
+      case 'warning': return '#b78136'
       case 'danger': return '#EF4444'
       case 'info': return '#3B82F6'
-      default: return '#8B5CF6'
+      default: return '#176b58'
     }
   }};
   color: #fff;
@@ -58,7 +58,7 @@ export const Card = styled.div<{ hover?: boolean; shadow?: string; padding?: str
 `
 
 export const PageTitle = styled.h1`
-  font-size: 40px;
+  font-size: clamp(36px, 4.8vw, 64px);
   font-weight: 800;
   line-height: 1.1;
   color: #0f172a;
@@ -76,7 +76,7 @@ export const PageSubtitle = styled.p`
 
 export const Grid = styled.div<{ cols?: string; gap?: string }>`
   display: grid;
-  grid-template-columns: ${({ cols }) => cols || 'repeat(auto-fit, minmax(280px, 1fr))'};
+  grid-template-columns: ${({ cols }) => cols || 'repeat(auto-fit, minmax(min(100%, 280px), 1fr))'};
   gap: ${({ gap }) => gap || '24px'};
   width: 100%;
 `
