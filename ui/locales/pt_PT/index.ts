@@ -1,4 +1,5 @@
 import admin from './admin.json'
+import landing from './landing.json'
 import common from './common.json'
 import form from './form.json'
 import language from './language.json'
@@ -13,6 +14,7 @@ import validation from './validation.json'
 
 export const pt_PT = {
   admin,
+  landing,
   common,
   form,
   language,

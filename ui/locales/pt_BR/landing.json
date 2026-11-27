@@ -1,0 +1,150 @@
+{
+  "seo": {
+    "title": "OhMyForm — Simples de criar. Gostoso de responder.",
+    "description": "Crie formulários com personalidade. Personalize suas perguntas, compartilhe com as pessoas e acompanhe cada resposta em um só lugar."
+  },
+  "nav": {
+    "features": "Recursos",
+    "custom": "Personalização",
+    "faq": "Dúvidas",
+    "login": "Entrar",
+    "cta": "Criar formulário",
+    "menu": "Abrir menu",
+    "skip": "Ir para o conteúdo",
+    "navigation": "Navegação principal"
+  },
+  "hero": {
+    "eyebrow": "PEQUENAS PERGUNTAS. GRANDES POSSIBILIDADES.",
+    "title": "Formulários simples.",
+    "highlight": "Conexões de verdade.",
+    "subtitle": "Dê adeus aos formulários sem graça. Transforme suas perguntas em uma experiência leve, bonita e com a sua personalidade.",
+    "cta": "Criar meu formulário",
+    "micro": "Sem precisar programar · Open source",
+    "try": "Pode clicar. É uma demonstração :)",
+    "demoLabel": "VAMOS NOS CONHECER?",
+    "demoTitle": "O que te trouxe até aqui?",
+    "demoBody": "Toda boa ideia começa com uma conversa.",
+    "option1": "Quero ouvir meus clientes",
+    "option2": "Tenho uma ideia incrível",
+    "option3": "Estou só explorando",
+    "selected": "Boa escolha! Vamos criar algo juntos.",
+    "hint": "Escolha uma opção para experimentar."
+  },
+  "social": {
+    "title": "Para quem tem boas perguntas — e vontade de ouvir.",
+    "simple": "Simples de criar",
+    "human": "Feito para pessoas",
+    "open": "Aberto por natureza"
+  },
+  "features": {
+    "eyebrow": "MENOS COMPLICAÇÃO, MAIS POSSIBILIDADES",
+    "title": "Leve na experiência.",
+    "highlight": "Rico em possibilidades.",
+    "subtitle": "Tudo para tirar sua ideia do papel e conhecer melhor quem está do outro lado.",
+    "item1": {
+      "title": "Da ideia ao formulário",
+      "desc": "Adicione perguntas e organize sua sequência. Crie pesquisas, inscrições e enquetes sem escrever código."
+    },
+    "item2": {
+      "title": "Um visual que é seu",
+      "desc": "Personalize cores e mensagens. Faça seu formulário parecer uma extensão natural da sua marca."
+    },
+    "item3": {
+      "title": "Aberto a possibilidades",
+      "desc": "Código aberto para quem gosta de ter liberdade. Explore, contribua e hospede sua própria instalação."
+    },
+    "item4": {
+      "title": "Bonito em qualquer tela",
+      "desc": "Uma experiência que acompanha seu público, no computador, no tablet ou no celular."
+    },
+    "item5": {
+      "title": "Pronto para compartilhar",
+      "desc": "Publique e envie o link para quem você quer ouvir. Uma boa conversa pode começar em qualquer lugar."
+    },
+    "item6": {
+      "title": "Cada resposta importa",
+      "desc": "Acompanhe as respostas no painel e reúna as informações que ajudam você a decidir o próximo passo."
+    }
+  },
+  "custom": {
+    "eyebrow": "UMA PITADA DA SUA PERSONALIDADE",
+    "title": "Seu formulário.",
+    "highlight": "Do seu jeitinho.",
+    "body": "Dê às suas perguntas a mesma personalidade da sua marca. Brinque com as cores, personalize os textos e faça cada detalhe contar.",
+    "b1": "Cores que combinam com a sua identidade",
+    "b2": "Perguntas e mensagens com a sua voz",
+    "b3": "Uma experiência agradável em qualquer tela",
+    "previewTitle": "Como foi sua experiência?",
+    "previewBody": "Sua opinião faz toda a diferença.",
+    "rating": "Nota",
+    "palette": "Cor da demonstração",
+    "paletteHint": "Escolha uma cor. Veja a ideia ganhar vida.",
+    "lavender": "Lavanda",
+    "rose": "Rosa",
+    "sage": "Verde suave",
+    "sun": "Amarelo suave"
+  },
+  "usecases": {
+    "eyebrow": "FEITO PARA AS SUAS IDEIAS",
+    "title": "Tem uma pergunta? Tem um formulário.",
+    "subtitle": "Do próximo evento ao feedback que vai transformar seu produto.",
+    "cat1": {
+      "title": "Marketing",
+      "b1": "Captação de leads",
+      "b2": "Pesquisas de mercado",
+      "b3": "Feedback de campanhas"
+    },
+    "cat2": {
+      "title": "Pessoas e cultura",
+      "b1": "Integração de equipes",
+      "b2": "Pesquisa de clima",
+      "b3": "Feedback interno"
+    },
+    "cat3": {
+      "title": "Educação",
+      "b1": "Inscrições de alunos",
+      "b2": "Avaliações de cursos",
+      "b3": "Questionários"
+    },
+    "cat4": {
+      "title": "Pesquisa",
+      "b1": "Entrevistas e estudos",
+      "b2": "Coleta de informações",
+      "b3": "Pesquisas de opinião"
+    },
+    "cat5": {
+      "title": "Eventos",
+      "b1": "Confirmação de presença",
+      "b2": "Inscrições",
+      "b3": "Feedback pós-evento"
+    },
+    "cat6": {
+      "title": "Produto",
+      "b1": "Sugestões de melhorias",
+      "b2": "Pesquisa de satisfação",
+      "b3": "Inscrições para testes"
+    }
+  },
+  "final": {
+    "title": "Sua próxima grande ideia começa com uma pergunta.",
+    "cta": "Vamos criar juntos",
+    "micro": "Simples de começar. Cheio de possibilidades."
+  },
+  "faq": {
+    "title": "Alguma dúvida por aí?",
+    "q1": "Preciso saber programar?",
+    "a1": "Não. Você pode criar e organizar perguntas pelo editor, personalizar o visual e publicar seu formulário pela plataforma.",
+    "q2": "Posso personalizar o formulário?",
+    "a2": "Sim. Você pode ajustar as cores, os textos e as páginas de início e encerramento para criar uma experiência com a sua identidade.",
+    "q3": "Como compartilho e acompanho as respostas?",
+    "a3": "Depois de publicar, compartilhe o link do formulário. As respostas ficam disponíveis no painel administrativo para você consultar.",
+    "q4": "O OhMyForm é open source?",
+    "a4": "Sim. O código é aberto e pode ser consultado no GitHub. Você também pode hospedar sua própria instalação, seguindo a documentação e os termos da licença."
+  },
+  "footer": {
+    "tagline": "Boas perguntas aproximam pessoas.",
+    "product": "Explore",
+    "login": "Acessar minha conta",
+    "copy": "OhMyForm · Feito para boas conversas."
+  }
+}

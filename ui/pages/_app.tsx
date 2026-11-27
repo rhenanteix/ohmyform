@@ -45,6 +45,7 @@ const App: AppType = ({ Component, pageProps }) => {
       <ThemeProvider defaultTheme="light" storageKey="omf-theme">
         <Head>
           <title>OhMyForm</title>
+          <link rel="icon" type="image/svg+xml" href="/brand/ohmyform-symbol.svg" />
           <meta name="theme-color" content="#059669" />
           <meta name="color-scheme" content="light dark" />
         </Head>
