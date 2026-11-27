@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { createPortal } from 'react-dom';
 import styled, { keyframes } from 'styled-components';
 
 export interface ToastProps {
@@ -30,7 +29,8 @@ const ToastContainer = styled.div<{ $type: ToastProps['type']; $exiting: boolean
   align-items: flex-start;
   gap: var(--omf-spacing-3);
   padding: var(--omf-spacing-4);
-  min-width: 320px;
+  width: min(480px, calc(100vw - 32px));
+  min-width: 0;
   max-width: 480px;
   background: var(--omf-colors-background-primary);
   border: 1px solid ${({ $type }) => {
@@ -211,7 +211,7 @@ export function Toast({ id, type, title, description, action, duration = 5000, o
     setTimeout(() => onClose(id), 200);
   };
 
-  return createPortal(
+  return (
     <ToastContainer $type={type} $exiting={exiting} role="alert" aria-live="polite">
       <IconWrapper $type={type}>{icons[type]}</IconWrapper>
       <Content>
@@ -225,8 +225,7 @@ export function Toast({ id, type, title, description, action, duration = 5000, o
           <line x1="6" y1="6" x2="18" y2="18" />
         </svg>
       </CloseButton>
-    </ToastContainer>,
-    document.body,
+    </ToastContainer>
   );
 }
 

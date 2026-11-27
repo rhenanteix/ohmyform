@@ -7,7 +7,7 @@ interface Data {
 }
 
 interface Variables {
-  form: FormFragment
+  form: { id: string } & Partial<Omit<FormFragment, 'created' | 'lastModified' | 'admin'>>
 }
 
 const MUTATION = gql`

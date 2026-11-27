@@ -66,7 +66,7 @@ export const colors = {
   },
   background: {
     primary: '#ffffff',
-    secondary: '#f7f8f5',
+    secondary: '#fcfbf7',
     tertiary: '#f0f2ec',
     inverse: '#233c35',
   },

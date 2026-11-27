@@ -633,8 +633,8 @@ export const AdminRoot = styled.div<{ sidebarOpen: boolean }>`
 
   @media (min-width: 768px) {
     display: grid;
-    grid-template-columns: 248px minmax(0, 1fr);
-    grid-template-rows: 72px minmax(0, 1fr);
+    grid-template-columns: 224px minmax(0, 1fr);
+    grid-template-rows: 64px minmax(0, 1fr);
   }
 `
 
@@ -654,7 +654,7 @@ export const AdminHeader = styled.header`
 
   @media (min-width: 768px) {
     grid-column: 1 / -1;
-    height: 72px;
+    height: 64px;
   }
 `
 
@@ -704,9 +704,9 @@ export const AdminSider = styled(Sider)<{ $sidebarOpen?: boolean }>`
   border-right: 1px solid var(--omf-color-border);
   box-shadow: none;
   flex-shrink: 0;
-  width: 248px !important;
-  min-width: 248px !important;
-  max-width: 248px !important;
+  width: 224px !important;
+  min-width: 224px !important;
+  max-width: 224px !important;
   overflow-y: auto;
 
   .ant-layout-sider-children {
@@ -747,8 +747,8 @@ export const AdminSider = styled(Sider)<{ $sidebarOpen?: boolean }>`
   }
 
   .ant-menu-item-selected {
-    border-left: 3px solid var(--omf-color-primary-600) !important;
-    box-shadow: inset 0 2px 4px rgba(16, 185, 129, 0.15);
+    border-left: none !important;
+    box-shadow: none;
   }
 
   .ant-menu-sub-title {
@@ -796,7 +796,7 @@ export const MobileBackdrop = styled.div<{ visible: boolean }>`
 
 export const AdminContent = styled.main<{ padded?: boolean }>`
   flex: 1;
-  padding: 36px;
+  padding: 28px 32px;
   overflow-y: auto;
   min-width: 0;
   min-height: 0;

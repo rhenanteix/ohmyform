@@ -72,10 +72,10 @@ const StyledButton = styled.button<{
       primary: css`
         background: var(--omf-gradients-primary);
         color: var(--omf-colors-semantic-success-foreground);
-        box-shadow: 0 4px 14px 0 rgba(5, 150, 105, 0.35);
+        box-shadow: none;
         &:hover:not(:disabled) {
           filter: brightness(1.05);
-          box-shadow: 0 6px 20px 0 rgba(5, 150, 105, 0.45);
+          box-shadow: var(--omf-shadows-sm);
           transform: translateY(-1px);
         }
         &:active:not(:disabled) {
@@ -235,6 +235,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     return (
       <StyledButton
         ref={ref}
+        type="button"
         $variant={variant}
         $size={size}
         $fullWidth={fullWidth}

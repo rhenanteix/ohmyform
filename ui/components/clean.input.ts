@@ -2,7 +2,7 @@
 const omitDeepArrayWalk = (arr, key) => {
   return arr.map((val) => {
     if (Array.isArray(val)) return omitDeepArrayWalk(val, key)
-    else if (typeof val === 'object') return omitDeep(val, key)
+    else if (val !== null && typeof val === 'object') return omitDeep(val, key)
     return val
   })
 }

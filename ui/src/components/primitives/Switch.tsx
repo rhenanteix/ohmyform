@@ -153,8 +153,10 @@ const DescriptionText = styled.span`
 
 const Switch = forwardRef<HTMLInputElement, SwitchProps>(
   ({ label, description, switchSize = 'md', disabled, id, required, ...props }, ref) => {
-    const switchId = id || `switch-${useId()}`;
-    const [checked, setChecked] = React.useState(props.defaultChecked || false);
+    const generatedId = useId();
+    const switchId = id || `switch-${generatedId}`;
+    const [internalChecked, setChecked] = React.useState(props.defaultChecked || false);
+    const checked = props.checked ?? internalChecked;
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       setChecked(e.target.checked);
@@ -167,11 +169,11 @@ const Switch = forwardRef<HTMLInputElement, SwitchProps>(
           ref={ref}
           type="checkbox"
           id={switchId}
-          checked={checked}
           disabled={disabled}
           required={required}
-          onChange={handleChange}
           {...props}
+          checked={checked}
+          onChange={handleChange}
         />
         <SwitchTrack $checked={checked} $disabled={disabled} className="switch-track" aria-hidden="true">
           <SwitchThumb $checked={checked} className="switch-thumb" data-checked={checked} aria-hidden="true">

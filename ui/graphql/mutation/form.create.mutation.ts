@@ -12,6 +12,9 @@ interface Variables {
     language: string
     showFooter?: boolean
     title: string
+    layout?: string
+    anonymousSubmission?: boolean
+    endPage?: { show: boolean; title?: string; buttonText?: string }
   }
 }
 

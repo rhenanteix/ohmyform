@@ -91,5 +91,23 @@
   "noUsers": "Nenhum usuário encontrado",
   "noUsersDesc": "Não há usuários cadastrados na plataforma.",
   "verified": "Verificado",
-  "selectLanguage": "Selecionar idioma"
+  "selectLanguage": "Selecionar idioma",
+  "onboarding": {
+    "welcomeDescription": "Configure sua conta em poucos minutos e crie seu primeiro formulário.",
+    "fastSetup": "Configuração rápida",
+    "mobileReady": "Pronto para mobile",
+    "realTime": "Respostas em tempo real",
+    "formTitlePlaceholder": "Digite o título do seu formulário",
+    "formTip": "Escolha um nome descritivo. Você pode alterá-lo a qualquer momento.",
+    "allSet": "Tudo configurado!",
+    "formCreatedDesc": "Seu primeiro formulário foi criado e já está publicado.",
+    "back": "Voltar",
+    "next": "Avançar",
+    "createForm": "Criar formulário",
+    "finish": "Finalizar",
+    "formCreated": "Formulário criado com sucesso!",
+    "formCreateError": "Não foi possível criar o formulário. Tente novamente.",
+    "completed": "Onboarding concluído com sucesso!",
+    "completeError": "Não foi possível concluir o onboarding. Tente novamente."
+  }
 }

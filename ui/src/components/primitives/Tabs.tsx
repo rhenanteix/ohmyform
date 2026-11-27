@@ -240,6 +240,7 @@ const Tabs = forwardRef<HTMLDivElement, TabsProps>(
             <TabButton
               key={tab.id}
               role="tab"
+              type="button"
               id={`tab-${tab.id}`}
               aria-selected={activeTab === tab.id}
               aria-controls={`panel-${tab.id}`}
@@ -252,6 +253,15 @@ const Tabs = forwardRef<HTMLDivElement, TabsProps>(
               data-active={activeTab === tab.id}
               onClick={() => !tab.disabled && onChange(tab.id)}
               onKeyDown={(e) => {
+                if (['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(e.key)) {
+                  e.preventDefault();
+                  const enabled = tabs.filter(item => !item.disabled);
+                  const index = enabled.findIndex(item => item.id === tab.id);
+                  const nextIndex = e.key === 'Home' ? 0 : e.key === 'End' ? enabled.length - 1 : (index + (e.key === 'ArrowRight' ? 1 : -1) + enabled.length) % enabled.length;
+                  const next = enabled[nextIndex];
+                  onChange(next.id);
+                  tabListRef.current?.querySelector<HTMLButtonElement>(`[id="tab-${next.id}"]`)?.focus();
+                }
                 if (e.key === 'Enter' || e.key === ' ') {
                   e.preventDefault();
                   !tab.disabled && onChange(tab.id);

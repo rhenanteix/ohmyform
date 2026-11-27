@@ -24,7 +24,12 @@ export class FormCreateService {
     form.showFooter = Boolean(input.showFooter)
     form.anonymousSubmission = Boolean(input.anonymousSubmission)
     form.language = input.language || 'en'
-    form.design.layout = input.layout
+    form.design.layout = input.layout || 'card'
+    form.design.font = 'Inter, sans-serif'
+    Object.assign(form.design.colors, {
+      background: '#fcfbf7', question: '#233c35', answer: '#245d4c',
+      button: '#245d4c', buttonActive: '#183f34', buttonText: '#ffffff',
+    })
 
 
     form.endPage = this.formPageCreateService.create(input.endPage)

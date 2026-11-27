@@ -1,4 +1,4 @@
-import { Form, Tabs } from 'antd'
+import { Form } from 'antd'
 import { TabPaneProps } from 'antd/lib/tabs'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
@@ -9,7 +9,7 @@ export const BaseDataTab: React.FC<TabPaneProps> = (props) => {
   const { t } = useTranslation()
 
   return (
-    <Tabs.TabPane {...props}>
+    <>
       <Form.Item
         label={t('form:baseData.isLive')}
         name={['form', 'isLive']}
@@ -64,6 +64,6 @@ export const BaseDataTab: React.FC<TabPaneProps> = (props) => {
       >
         <Switch />
       </Form.Item>
-    </Tabs.TabPane>
+    </>
   )
 }

@@ -89,7 +89,7 @@ OhMyForm is being modernized in the open. Items below are planned work, not prom
 
 ### Modernization (in progress)
 
-- [ ] Refresh the stack: update dependencies and runtime to current, supported versions
+- [x] Refresh the stack: update dependencies and runtime to current, supported versions
 - [ ] Revamp the UI/UX with a modern, accessible and fully responsive design
 - [ ] Dark mode
 - [ ] Improve performance and bundle size

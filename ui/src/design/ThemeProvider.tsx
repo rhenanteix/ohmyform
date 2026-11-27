@@ -23,34 +23,15 @@ export function ThemeProvider({
   storageKey?: string
 }) {
   const [theme, setThemeState] = useState<'light' | 'dark'>(defaultTheme)
-  const [mounted, setMounted] = useState(false)
   const [resolvedTheme, setResolvedTheme] = useState<'light' | 'dark'>(defaultTheme)
 
   useEffect(() => {
-    setMounted(true)
     const stored = localStorage.getItem(storageKey) as 'light' | 'dark' | null
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-    const initial = stored || (prefersDark ? 'dark' : 'light')
+    const initial = stored === 'dark' || stored === 'light' ? stored : defaultTheme
     setThemeState(initial)
     setResolvedTheme(initial)
     document.documentElement.setAttribute('data-theme', initial)
-  }, [storageKey])
-
-  useEffect(() => {
-    if (!mounted) return
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
-    const handleChange = (e: MediaQueryListEvent) => {
-      const stored = localStorage.getItem(storageKey)
-      if (!stored) {
-        const newTheme = e.matches ? 'dark' : 'light'
-        setThemeState(newTheme)
-        setResolvedTheme(newTheme)
-        document.documentElement.setAttribute('data-theme', newTheme)
-      }
-    }
-    mediaQuery.addEventListener('change', handleChange)
-    return () => mediaQuery.removeEventListener('change', handleChange)
-  }, [mounted, storageKey])
+  }, [storageKey, defaultTheme])
 
   const setTheme = (newTheme: 'light' | 'dark') => {
     setThemeState(newTheme)

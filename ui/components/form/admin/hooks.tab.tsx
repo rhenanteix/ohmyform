@@ -1,5 +1,5 @@
 import { DeleteOutlined, PlusOutlined } from '@ant-design/icons/lib'
-import { Button as AntdButton, Form, Popconfirm, Space, Tabs } from 'antd'
+import { Button as AntdButton, Form, Popconfirm, Space } from 'antd'
 import { TabPaneProps } from 'antd/lib/tabs'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
@@ -12,7 +12,7 @@ export const HooksTab: React.FC<Props> = (props) => {
   const { t } = useTranslation()
 
   return (
-    <Tabs.TabPane {...props}>
+    <>
       <Form.List name={['form', 'hooks']}>
         {(hooks, { add, remove }) => {
           return (
@@ -95,6 +95,6 @@ export const HooksTab: React.FC<Props> = (props) => {
           )
         }}
       </Form.List>
-    </Tabs.TabPane>
+    </>
   )
 }

@@ -1,5 +1,5 @@
 import { DeleteOutlined, PlusOutlined } from '@ant-design/icons/lib'
-import { Form, Tabs } from 'antd'
+import { Form } from 'antd'
 import { TabPaneProps } from 'antd/lib/tabs'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
@@ -11,7 +11,7 @@ export const StartPageTab: React.FC<TabPaneProps> = (props) => {
   const { t } = useTranslation()
 
   return (
-    <Tabs.TabPane {...props}>
+    <>
       <Form.Item
         label={t('form:startPage.show')}
         name={[
@@ -64,7 +64,7 @@ export const StartPageTab: React.FC<TabPaneProps> = (props) => {
                   <Card actions={[<DeleteOutlined key={'delete'} onClick={() => remove(index)} />]}>
                     <Form.Item
                       label={t('form:startPage.url')}
-                      name={[field.key, 'url']}
+                      name={[field.name, 'url']}
                       rules={[{ type: 'url', message: t('validation:invalidUrl') }]}
                       labelCol={{ span: 6 }}
                     >
@@ -72,35 +72,35 @@ export const StartPageTab: React.FC<TabPaneProps> = (props) => {
                     </Form.Item>
                     <Form.Item
                       label={t('form:startPage.action')}
-                      name={[field.key, 'action']}
+                      name={[field.name, 'action']}
                       labelCol={{ span: 6 }}
                     >
                       <Input />
                     </Form.Item>
                     <Form.Item
                       label={t('form:startPage.text')}
-                      name={[field.key, 'text']}
+                      name={[field.name, 'text']}
                       labelCol={{ span: 6 }}
                     >
                       <Input />
                     </Form.Item>
                     <Form.Item
                       label={t('form:startPage.bgColor')}
-                      name={[field.key, 'bgColor']}
+                      name={[field.name, 'bgColor']}
                       labelCol={{ span: 6 }}
                     >
                       <InputColor />
                     </Form.Item>
                     <Form.Item
                       label={t('form:startPage.activeColor')}
-                      name={[field.key, 'activeColor']}
+                      name={[field.name, 'activeColor']}
                       labelCol={{ span: 6 }}
                     >
                       <InputColor />
                     </Form.Item>
                     <Form.Item
                       label={t('form:startPage.color')}
-                      name={[field.key, 'color']}
+                      name={[field.name, 'color']}
                       labelCol={{ span: 6 }}
                     >
                       <InputColor />
@@ -127,6 +127,6 @@ export const StartPageTab: React.FC<TabPaneProps> = (props) => {
           )
         }}
       </Form.List>
-    </Tabs.TabPane>
+    </>
   )
 }

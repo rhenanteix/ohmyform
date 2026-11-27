@@ -33,6 +33,9 @@ export class UserModel {
   readonly lastName?: string
 
   @Field()
+  readonly onboardingCompleted: boolean
+
+  @Field()
   readonly created: Date
 
   @Field({ nullable: true })
@@ -47,6 +50,7 @@ export class UserModel {
     this.language = user.language
     this.firstName = user.firstName
     this.lastName = user.lastName
+    this.onboardingCompleted = user.onboardingCompleted
 
     this.verifiedEmail = user.emailVerified
     this.emailVerified = user.emailVerified

@@ -2,7 +2,7 @@ import { PlusOutlined } from '@ant-design/icons/lib'
 import { Form, Space } from 'antd'
 import { FormInstance } from 'antd/lib/form'
 import { FieldData } from 'rc-field-form/lib/interface'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FormFieldFragment, FormFieldLogicFragment } from '../../../graphql/fragment/form.fragment'
 import { fieldTypes } from '../types'
@@ -34,40 +34,7 @@ export const FieldCard: React.FC<Props> = ({
   const type = form.getFieldValue([
     'form', 'fields', field.name as string, 'type',
   ]) as string
-  const TypeComponent = (fieldTypes[type] || fieldTypes['textfield']).adminFormField()
-
-  const [shouldUpdate, setShouldUpdate] = useState(false)
-  const [nextTitle, setNextTitle] = useState<string>(
-    form.getFieldValue([
-      'form', 'fields', field.name as string, 'title',
-    ])
-  )
-
-  useEffect(() => {
-    if (!shouldUpdate) {
-      return
-    }
-
-    const id = setTimeout(() => {
-      setShouldUpdate(false)
-      onChangeFields(
-        fields.map((field, i) => {
-          if (i === index) {
-            return {
-              ...field,
-              title: nextTitle,
-            }
-          } else {
-            return field
-          }
-        })
-      )
-    }, 500)
-
-    return () => clearTimeout(id)
-  }, [
-    nextTitle, shouldUpdate, fields,
-  ])
+  const TypeComponent = useMemo(() => (fieldTypes[type] || fieldTypes.textfield).adminFormField(), [type])
 
   const addLogic = useCallback((add: (defaults: unknown) => void, _index: number) => {
     return (
@@ -108,6 +75,14 @@ export const FieldCard: React.FC<Props> = ({
       variant="outlined"
       padding="md"
     >
+      <Space wrap style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 24 }}>
+        <strong>{index + 1}. {t(`type:${type}.name`)}</strong>
+        <Space wrap>
+          <Button variant="secondary" disabled={index === 0} onClick={() => move(index, index - 1)} aria-label="Mover pergunta para cima">↑</Button>
+          <Button variant="secondary" disabled={index === fields.length - 1} onClick={() => move(index, index + 1)} aria-label="Mover pergunta para baixo">↓</Button>
+          <Button variant="secondary" onClick={() => remove(index)}>Remover pergunta</Button>
+        </Space>
+      </Space>
       <Form.Item name={[field.name as string, 'type']} noStyle>
         <Input type={'hidden'} />
       </Form.Item>
@@ -119,8 +94,7 @@ export const FieldCard: React.FC<Props> = ({
       >
         <Input
           onChange={(e) => {
-            setNextTitle(e.target.value)
-            setShouldUpdate(true)
+            onChangeFields(fields.map((item, i) => i === index ? { ...item, title: e.target.value } : item))
           }}
         />
       </Form.Item>
@@ -144,11 +118,12 @@ export const FieldCard: React.FC<Props> = ({
 
       <TypeComponent field={field} form={form} />
 
+      <details><summary>Lógica condicional · avançado</summary>
       <Form.List name={[field.name as string, 'logic']}>
         {(logic, { add, remove: removeLogic, move }) => {
           const addAndMove = (index: number) => (defaults) => {
             add(defaults)
-            move(fields.length, index)
+            move(logic.length, index)
           }
 
           return (
@@ -172,6 +147,7 @@ export const FieldCard: React.FC<Props> = ({
           )
         }}
       </Form.List>
+      </details>
     </PrimitiveCard>
   )
 }

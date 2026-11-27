@@ -1,129 +1,57 @@
-import { PlusOutlined } from '@ant-design/icons/lib'
-import { Form, Space, Tabs } from 'antd'
+import { Form, Modal } from 'antd'
 import { FormInstance } from 'antd/lib/form'
-import { TabPaneProps } from 'antd/lib/tabs'
-import debug from 'debug'
-import { FieldData } from 'rc-field-form/lib/interface'
-import React, { useCallback, useState } from 'react'
+import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import styled from 'styled-components'
 import { FormFieldFragment } from '../../../graphql/fragment/form.fragment'
 import { fieldTypes } from '../types'
 import { FieldCard } from './field.card'
-import { Button, Select } from 'src/components/primitives'
+import { Button, Input } from 'src/components/primitives'
 
-const logger = debug('FieldsTab')
-
-interface Props extends TabPaneProps {
-  form: FormInstance
-  fields: FormFieldFragment[]
-  onChangeFields: (fields: FormFieldFragment[]) => void
-}
-
-export const FieldsTab: React.FC<Props> = (props) => {
+const Picker = styled.div`
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 20px;
+  button { border: 1px solid var(--omf-color-border); border-radius: 10px; padding: 16px; background: var(--omf-color-surface); color: var(--omf-color-text-primary); text-align: left; cursor: pointer; }
+  button:hover { background: var(--omf-color-primary-50); border-color: var(--omf-color-primary-400); }
+  span { display: inline-grid; place-items: center; width: 28px; height: 28px; border-radius: 6px; background: var(--omf-color-surface-secondary); margin-right: 10px; font-weight: 600; }
+  @media(max-width: 480px) { grid-template-columns: 1fr; }
+`
+const icons = { textfield: 'Aa', textarea: '¶', email: '@', number: '#', radio: '◉', checkbox: '☑', dropdown: '⌄', rating: '☆', date: '▦', yes_no: '✓', link: '↗', slider: '↔', location: '⌖', hidden: '…' }
+export const FieldsTab: React.FC<{ form: FormInstance; fields: FormFieldFragment[]; onChangeFields: (fields: FormFieldFragment[]) => void }> = (props) => {
   const { t } = useTranslation()
-  const [nextType, setNextType] = useState('textfield')
-
-  const renderType = useCallback(
-    (
-      field: FieldData,
-      index: number,
-      remove: (index: number) => void,
-      move: (from: number, to: number) => void
-    ) => {
-      return (
-        <FieldCard
-          form={props.form}
-          field={field}
-          index={index}
-          remove={(index: number) => {
-            logger('remove %d', index)
-            remove(index)
-          }}
-          move={(from: number, to: number) => {
-            logger('move %d TO %d', from, to)
-            move(from, to)
-          }}
-          fields={props.fields}
-          onChangeFields={props.onChangeFields}
-        />
-      )
-    },
-    [props.fields]
-  )
-
-  const addField = useCallback(
-    (add: (defaults: unknown) => void, index: number) => {
-      return (
-        <Form.Item wrapperCol={{ span: 24 }}>
-          <Space
-            wrap
-            style={{
-              width: '100%',
-              justifyContent: 'flex-end',
-            }}
-          >
-            <Select
-              value={nextType}
-              onChange={(e) => setNextType(e.target.value)}
-              style={{ minWidth: 200 }}
-              options={Object.keys(fieldTypes).map((type) => ({
-                value: type,
-                label: t(`type:${type}.name`),
-              }))}
-            />
-            <Button
-              variant="dashed"
-              onClick={() => {
-                const defaults: FormFieldFragment = {
-                  logic: [],
-                  options: [],
-                  id: `NEW-${Date.now()}`,
-                  type: nextType,
-                  title: '',
-                  description: '',
-                  required: false,
-                }
-
-                add(defaults)
-                const next = [...props.fields]
-                next.splice(index, 0, defaults)
-                props.onChangeFields(next)
-              }}
-            >
-              <PlusOutlined /> {t('type:add')}
-            </Button>
-          </Space>
-        </Form.Item>
-      )
-    },
-    [props.fields, nextType]
-  )
-
+  const [open, setOpen] = useState(false)
+  const [search, setSearch] = useState('')
+  const sync = () => props.onChangeFields(props.form.getFieldValue(['form', 'fields']) || [])
   return (
-    <Tabs.TabPane {...props}>
-      <Form.List name={['form', 'fields']}>
-        {(fields, { add, remove, move }) => {
-          const addAndMove = (index: number) => (defaults) => {
-            add(defaults)
-            move(fields.length, index)
-          }
-
-          return (
-            <div>
-              {addField(addAndMove(0), 0)}
-              {fields.map((field, index) => (
-                <div key={field.key}>
-                  <Form.Item wrapperCol={{ span: 24 }}>
-                    {renderType(field, index, remove, move)}
-                  </Form.Item>
-                  {addField(addAndMove(index + 1), index + 1)}
-                </div>
-              ))}
+    <Form.List name={['form', 'fields']}>
+      {(fields, { add, remove, move }) => (
+        <>
+          {!fields.length && (
+            <div style={{ padding: '40px 24px', textAlign: 'center', border: '1px dashed var(--omf-color-border-strong)', borderRadius: 14, marginBottom: 20 }}>
+              <span style={{ fontSize: 36, color: 'var(--omf-color-primary-600)' }} aria-hidden="true">✎</span>
+              <h3 style={{ margin: '16px 0 8px' }}>Tudo começa com uma pergunta.</h3>
+              <p style={{ color: 'var(--omf-color-text-secondary)' }}>Adicione o que você quer saber. A prévia aparece ao lado.</p>
             </div>
-          )
-        }}
-      </Form.List>
-    </Tabs.TabPane>
+          )}
+          {fields.map((field, index) => (
+            <div key={field.key} style={{ marginBottom: 20 }}>
+              <FieldCard form={props.form} field={field} index={index} fields={props.fields} onChangeFields={props.onChangeFields}
+                remove={i => { remove(i); sync() }} move={(from, to) => { move(from, to); sync() }} />
+            </div>
+          ))}
+          <Button variant="outline" fullWidth onClick={() => { setSearch(''); setOpen(true) }}>+ Adicionar pergunta</Button>
+          <Modal title="O que você quer perguntar?" visible={open} onCancel={() => setOpen(false)} footer={null} width={620} destroyOnClose>
+            <Input label="Buscar tipo de pergunta" placeholder="Texto, e-mail, avaliação…" value={search} onChange={e => setSearch(e.target.value)} />
+            <Picker>
+              {Object.keys(fieldTypes).filter(type => t(`type:${type}.name`).toLowerCase().includes(search.toLowerCase())).map(type => (
+                <button key={type} type="button" onClick={() => {
+                  add({ id: `NEW-${Date.now()}`, type, title: '', description: '', required: false, options: [], logic: [] })
+                  sync(); setOpen(false)
+                }}><span aria-hidden="true">{icons[type]}</span>{t(`type:${type}.name`)}</button>
+              ))}
+            </Picker>
+          </Modal>
+        </>
+      )}
+    </Form.List>
   )
 }
-
