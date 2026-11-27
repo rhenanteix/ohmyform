@@ -327,7 +327,9 @@ function TableComponent<T>({
     if (column.render) {
       return column.render(value, row, rowIndex);
     }
-    return typeof value === 'object' && value !== null ? String(value) : value;
+    if (React.isValidElement(value) || Array.isArray(value)) return value;
+    if (value instanceof Date) return value.toLocaleDateString();
+    return typeof value === 'object' && value !== null ? '—' : value;
   };
 
   if (loading) {
@@ -439,7 +441,7 @@ function TableComponent<T>({
             const canExpand = expandable && (!expandable.rowExpandable || expandable.rowExpandable(row));
 
             return (
-              <>
+              <React.Fragment key={rowKey}>
                 <Tr
                   key={rowKey}
                   $hoverable={hoverable}
@@ -522,7 +524,7 @@ function TableComponent<T>({
                     </Td>
                   </tr>
                 )}
-              </>
+              </React.Fragment>
             );
           })}
         </Tbody>

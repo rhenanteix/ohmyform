@@ -102,7 +102,8 @@ const DescriptionText = styled.span`
 
 const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
   ({ label, description, indeterminate = false, disabled, id, required, ...props }, ref) => {
-    const checkboxId = id || `checkbox-${useId()}`;
+    const generatedId = useId();
+    const checkboxId = id || `checkbox-${generatedId}`;
 
     return (
       <Wrapper htmlFor={checkboxId}>

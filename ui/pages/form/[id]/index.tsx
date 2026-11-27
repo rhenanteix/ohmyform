@@ -18,6 +18,7 @@ const Index: NextPage = () => {
     variables: {
       id: router.query.id as string,
     },
+    skip: !router.isReady,
   })
 
   useEffect(() => {
@@ -34,11 +35,11 @@ const Index: NextPage = () => {
     }
   }, [data])
 
-  if (loading) {
+  if (loading || !router.isReady) {
     return <LoadingPage message={t('form:build')} />
   }
 
-  if (error) {
+  if (error || !data?.form) {
     return <ErrorPage />
   }
 

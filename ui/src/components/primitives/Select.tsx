@@ -128,7 +128,8 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
     },
     ref,
   ) => {
-    const selectId = id || `select-${useId()}`;
+    const generatedId = useId();
+    const selectId = id || `select-${generatedId}`;
     const errorId = error ? `${selectId}-error` : undefined;
     const hintId = hint ? `${selectId}-hint` : undefined;
 
@@ -151,7 +152,7 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
             {...props}
           >
             {placeholder && (
-              <option value="" disabled selected hidden>
+              <option value="" disabled hidden>
                 {placeholder}
               </option>
             )}

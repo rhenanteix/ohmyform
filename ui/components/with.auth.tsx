@@ -33,7 +33,7 @@ export const withAuth = (Component: any, roles: string[] = [], optional?: boolea
         return
       }
 
-      localStorage.clear()
+      clearAuth()
       const path = router.asPath || router.pathname
       localStorage.setItem('redirect', path)
 

@@ -10,6 +10,7 @@ const Shell = styled.div`
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   background: #fcfbf7;
   color: #233c35;
+  font-family: Inter, sans-serif;
   .auth-story {
     margin: 20px;
     padding: clamp(28px, 5vw, 72px);
@@ -127,6 +128,8 @@ const Shell = styled.div`
     background: #245d4c !important;
     color: white !important;
     height: 46px;
+    border-color: #245d4c !important;
+    box-shadow: none !important;
   }
   .ant-btn-link {
     color: #245d4c !important;

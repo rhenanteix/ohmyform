@@ -1,5 +1,5 @@
 import { PlusOutlined } from '@ant-design/icons/lib'
-import { Form, Space, Tabs } from 'antd'
+import { Form, Space } from 'antd'
 import { FormInstance } from 'antd/lib/form'
 import { TabPaneProps } from 'antd/lib/tabs'
 import React, { useCallback } from 'react'
@@ -60,7 +60,7 @@ export const NotificationsTab: React.FC<Props> = (props) => {
   )
 
   return (
-    <Tabs.TabPane {...props}>
+    <>
       <Form.List name={['form', 'notifications']}>
         {(fields, { add, remove, move }) => {
           const addAndMove = (index: number) => (defaults) => {
@@ -89,6 +89,6 @@ export const NotificationsTab: React.FC<Props> = (props) => {
           )
         }}
       </Form.List>
-    </Tabs.TabPane>
+    </>
   )
 }

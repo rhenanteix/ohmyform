@@ -39,6 +39,7 @@ export const useSubmission = (formId: string): Submission => {
   )
 
   useEffect(() => {
+    if (!formId) return
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const token = [...Array(40)].map(() => Math.random().toString(36)[2]).join('')
 

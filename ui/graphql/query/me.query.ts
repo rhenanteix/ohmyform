@@ -7,6 +7,7 @@ interface Data {
     username: string
     email: string
     roles: string[]
+    onboardingCompleted: boolean
   }
 }
 
@@ -17,6 +18,7 @@ const QUERY = gql`
       email
       roles
       username
+      onboardingCompleted
     }
   }
 `

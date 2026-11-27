@@ -1,5 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import { Args, Context, Mutation } from '@nestjs/graphql'
+import { InjectRepository } from '@nestjs/typeorm'
+import { Repository } from 'typeorm'
 import { Roles } from '../../decorator/roles.decorator'
 import { User } from '../../decorator/user.decorator'
 import { ProfileModel } from '../../dto/profile/profile.model'
@@ -14,6 +16,8 @@ export class ProfileUpdateMutation {
   constructor(
     private readonly updateService: ProfileUpdateService,
     private readonly idService: IdService,
+    @InjectRepository(UserEntity)
+    private readonly userRepository: Repository<UserEntity>,
   ) {
   }
 
@@ -39,6 +43,20 @@ export class ProfileUpdateMutation {
     @Context('cache') cache: ContextCache,
   ): Promise<ProfileModel> {
     await this.updateService.verifyEmail(user, token)
+
+    cache.add(cache.getCacheKey(UserEntity.name, user.id), user)
+
+    return new ProfileModel(this.idService.encode(user.id), user)
+  }
+
+  @Mutation(() => ProfileModel)
+  @Roles('user')
+  async completeOnboarding(
+    @User() user: UserEntity,
+    @Context('cache') cache: ContextCache,
+  ): Promise<ProfileModel> {
+    user.onboardingCompleted = true
+    await this.userRepository.save(user)
 
     cache.add(cache.getCacheKey(UserEntity.name, user.id), user)
 

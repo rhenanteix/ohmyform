@@ -14,7 +14,6 @@ import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import ReactMarkdown from 'react-markdown'
-import { Omf } from '../../components/omf'
 import { useSettingsQuery } from '../../graphql/query/settings.query'
 import styled from 'styled-components'
 import { Logo } from '../../components/ui'
@@ -43,7 +42,8 @@ const BrandWrapper = styled.div`
 
 const WelcomeTitle = styled.h2`
   font-size: 30px;
-  font-weight: 700;
+  font-weight: 500;
+  letter-spacing: -1px;
   color: #233c35;
   margin: 0 0 8px;
   text-align: left;
@@ -105,13 +105,10 @@ const Index: NextPage = () => {
 
   return (
     <AuthLayout loading={loading}>
-      <Omf />
       <AuthContainer>
         <LoginCard>
-          <BrandWrapper>
-            <Logo width={36} height={36} brandText={false} />
-            <WelcomeTitle>Bem-vindo de volta</WelcomeTitle>
-          </BrandWrapper>
+          <BrandWrapper><Logo /></BrandWrapper>
+          <WelcomeTitle>Bom ter você de volta.</WelcomeTitle>
           <WelcomeSub>Faça login para acessar seus formulários e respostas.</WelcomeSub>
           <Form
             form={form}

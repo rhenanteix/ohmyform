@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { BlockPicker } from 'react-color'
 
 interface Props {
@@ -7,18 +7,12 @@ interface Props {
 }
 
 export const InputColor: React.FC<Props> = (props) => {
-  useEffect(() => {
-    if (!props.value) {
-      props.onChange('#FFF')
-    }
-  }, [props.value])
-
   return (
     <BlockPicker
       triangle={'hide'}
       width={'100%'}
-      color={props.value}
-      onChange={(e: { hex: string }) => props.onChange(e.hex)}
+      color={props.value || '#ffffff'}
+      onChange={(e: { hex: string }) => props.onChange?.(e.hex)}
       styles={{
         default: {
           card: {

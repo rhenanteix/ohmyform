@@ -1,16 +1,17 @@
 {
   "baseData": {
-    "isLive": "Está vivo",
-    "language": "Língua",
+    "isLive": "Publicado",
+    "language": "Idioma",
     "showFooter": "Mostrar rodapé",
-    "title": "Título"
+    "title": "Título",
+    "anonymousSubmission": "Permitir respostas sem login"
   },
-  "baseDataTab": "Dados Base",
+  "baseDataTab": "Configurações",
   "building": "Formulário de construção",
   "confirmDelete": "Tem certeza de que excluiu este formulário com todos os envios?",
   "continue": "Continuar",
   "create": "Criar novo formulário",
-  "createNow": "Salve ",
+  "createNow": "Criar formulário",
   "created": "Formulário criado",
   "creationError": "Não foi possível criar o formulário",
   "deleteError": "Não foi possível excluir o formulário",
@@ -20,19 +21,19 @@
     "color": {
       "answer": "Cor da resposta",
       "background": "Cor de fundo",
-      "button": "Cor do botao",
+      "button": "Cor do botão",
       "buttonActive": "Cor ativa do botão",
       "buttonText": "Cor do texto do botão",
-      "question": "Pergunta Color"
+      "question": "Cor da pergunta"
     },
     "font": "Fonte",
     "layout": {
-      "card": "Cartão",
-      "slider": "Slider"
+      "card": "Todas as perguntas na página",
+      "slider": "Uma pergunta por vez"
     },
     "layouts": "Layout"
   },
-  "designTab": "Projeto",
+  "designTab": "Aparência",
   "endPage": {
     "action": "Açao",
     "activeColor": "Cor ativa",
@@ -43,13 +44,13 @@
     "continueButtonText": "Texto do botão Continuar",
     "paragraph": "Parágrafo",
     "paragraphInfo": "Use markdown para formatação avançada",
-    "show": "exposição",
+    "show": "Mostrar página de agradecimento",
     "text": "Texto",
     "title": "Título",
     "url": "URL"
   },
   "endPageTab": "Página final",
-  "fieldsTab": "Campos do Formulário",
+  "fieldsTab": "Perguntas",
   "hooks": {
     "add": "Adicionar",
     "confirmDelete": "Vazio",
@@ -67,7 +68,7 @@
     },
     "add": "Adicionar lógica"
   },
-  "mange": "Editar formulário \" {{title}} \"",
+  "mange": "Editar formulário: {{title}}",
   "new": "Nova forma",
   "next": "Próximo",
   "notifications": {
@@ -78,7 +79,7 @@
     "fromField": "E-mail do remetente",
     "fromFieldInfo": "Campo com email, definirá o cabeçalho de resposta a",
     "htmlTemplate": "Modelo HTML",
-    "htmlTemplateInfo": "Você também pode usar o <u> MJML <\/u> para criar seus modelos de email",
+    "htmlTemplateInfo": "Você também pode usar o <u> MJML </u> para criar seus modelos de email",
     "subject": "Sujeito",
     "toEmail": "Seu email",
     "toEmailInfo": "Se não definido, será enviado ao administrador do formulário",
@@ -107,7 +108,7 @@
     "continueButtonText": "Texto do botão Continuar",
     "paragraph": "Parágrafo",
     "paragraphInfo": "Use markdown para formatação avançada",
-    "show": "exposição",
+    "show": "Mostrar página de boas-vindas",
     "text": "Texto",
     "title": "Título",
     "url": "URL"
@@ -115,6 +116,6 @@
   "startPageTab": "Página inicial",
   "submitted": "Obrigado pela sua submissão!",
   "updateError": "Não foi possível atualizar o formulário",
-  "updateNow": "Salve ",
+  "updateNow": "Salvar alterações",
   "updated": "Formulário atualizado"
 }

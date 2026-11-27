@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import {
   FormPublicDesignFragment,
   FormPublicFieldFragment,
@@ -17,7 +17,7 @@ interface Props {
 export const Field: React.FC<Props> = ({ field, design, focus, ...props }) => {
   const router = useRouter()
 
-  const FieldInput = (fieldTypes[field.type] || fieldTypes['text']).inputFormField()
+  const FieldInput = useMemo(() => (fieldTypes[field.type] || fieldTypes.textfield).inputFormField(), [field.type])
 
   const getUrlDefault = (): string => {
     if (router.query[field.id]) {

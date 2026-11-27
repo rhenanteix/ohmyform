@@ -1,6 +1,6 @@
 import { Form, message } from 'antd'
 import { useForm } from 'antd/lib/form/Form'
-import React from 'react'
+import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
   FormPublicDesignFragment,
@@ -28,7 +28,7 @@ export const Field: React.FC<Props> = ({ field, save, design, next, prev, ...pro
   const router = useRouter()
   const { t } = useTranslation()
 
-  const FieldInput = (fieldTypes[field.type] || fieldTypes[field.type]).inputFormField()
+  const FieldInput = useMemo(() => (fieldTypes[field.type] || fieldTypes.textfield).inputFormField(), [field.type])
 
   const finish = (data) => {
     console.log('received field data', data)

@@ -58,10 +58,10 @@ export const CardLayout: React.FC<LayoutProps> = (props) => {
         ? fieldTypes[field.type].parseValue(field.defaultValue)
         : null
 
-      defaults[`@${field.id}`] = form.getFieldValue([field.id, 'value']) ?? defaultValue
+      defaults[`@${field.id}`] = form.getFieldValue([field.id]) ?? defaultValue
 
       if (field.slug) {
-        defaults[`$${field.slug}`] = form.getFieldValue([field.id, 'value']) ?? defaultValue
+        defaults[`$${field.slug}`] = form.getFieldValue([field.id]) ?? defaultValue
       }
     })
 
@@ -138,7 +138,6 @@ export const CardLayout: React.FC<LayoutProps> = (props) => {
     setLoading(false)
   }
 
-  console.log('render')
 
   const render = () => {
     switch (step) {
@@ -218,7 +217,7 @@ export const CardLayout: React.FC<LayoutProps> = (props) => {
   }
 
   return (
-    <MyCard background={design.colors.background}>
+    <MyCard style={{ fontFamily: design.font || 'Inter, sans-serif' }} background={design.colors.background}>
       <Omf />
 
       <Spin spinning={loading}>{render()}</Spin>

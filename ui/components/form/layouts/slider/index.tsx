@@ -49,6 +49,7 @@ export const SliderLayout: React.FC<LayoutProps> = (props) => {
       className={'swiper-container'}
       style={{
         background: design.colors.background,
+        fontFamily: design.font || 'Inter, sans-serif',
       }}
     >
       <Omf />

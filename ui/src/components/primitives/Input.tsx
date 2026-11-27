@@ -124,9 +124,12 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
     },
     ref,
   ) => {
-    const inputId = id || `input-${useId()}`;
+    const generatedId = useId();
+    const inputId = id || `input-${generatedId}`;
     const errorId = error ? `${inputId}-error` : undefined;
     const hintId = hint ? `${inputId}-hint` : undefined;
+
+    if (props.type === 'hidden') return <input ref={ref} id={inputId} {...props} />;
 
     return (
       <Wrapper $fullWidth={fullWidth}>

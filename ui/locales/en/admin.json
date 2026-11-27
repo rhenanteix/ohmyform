@@ -105,5 +105,23 @@
   "confirmDelete": "Are you sure you want to delete this user?",
   "deleteNow": "Delete now",
   "selectLanguage": "Select language",
-  "searchPlaceholder": "Search..."
+  "searchPlaceholder": "Search...",
+  "onboarding": {
+    "welcomeDescription": "Set up your account in a few minutes and create your first form.",
+    "fastSetup": "Quick setup",
+    "mobileReady": "Mobile ready",
+    "realTime": "Real-time responses",
+    "formTitlePlaceholder": "Enter your form title",
+    "formTip": "Choose a descriptive name. You can change it anytime.",
+    "allSet": "All set!",
+    "formCreatedDesc": "Your first form has been created and is already published.",
+    "back": "Back",
+    "next": "Next",
+    "createForm": "Create form",
+    "finish": "Finish",
+    "formCreated": "Form created successfully!",
+    "formCreateError": "Failed to create form. Please try again.",
+    "completed": "Onboarding completed successfully!",
+    "completeError": "Failed to complete onboarding. Please try again."
+  }
 }

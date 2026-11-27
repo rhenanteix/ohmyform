@@ -16,6 +16,7 @@ import { useWindowSize } from '../use.window.size'
 import styled, { css } from 'styled-components'
 import { Logo } from '../ui'
 import { useTheme } from '../../src/design/ThemeProvider'
+import { Button } from '../../src/components/primitives/Button'
 import {
   AdminRoot,
   AdminHeader,
@@ -254,6 +255,9 @@ export const AdminStructure: FunctionComponent<Props> = (props) => {
   const router = useRouter()
   const user = useMeQuery()
 
+  const shouldShowMenu =
+    !user.loading && user.data && user.data.me.onboardingCompleted
+
   useEffect(() => {
     if (props.selected) {
       const parts = props.selected.split('.')
@@ -273,6 +277,18 @@ export const AdminStructure: FunctionComponent<Props> = (props) => {
     window.addEventListener('keydown', closeOnEscape)
     return () => window.removeEventListener('keydown', closeOnEscape)
   }, [sidebarOpen])
+
+  useEffect(() => {
+    if (user.loading || !user.data) return
+    const isOnboarding = router.pathname === '/admin/onboarding'
+    if (!user.data.me.onboardingCompleted && !isOnboarding) {
+      void router.replace('/admin/onboarding')
+    }
+  }, [
+    user.loading,
+    user.data,
+    router.pathname,
+  ])
 
   const closeSidebar = () => setSidebarOpen(false)
 
@@ -437,8 +453,9 @@ export const AdminStructure: FunctionComponent<Props> = (props) => {
               fontWeight: 600,
             }}
           >
-            WORKSPACE
+            MEU ESPAÇO
           </div>
+          {shouldShowMenu && <div style={{ padding: '0 16px 20px' }}><Button fullWidth onClick={() => { closeSidebar(); void router.push('/admin/forms/create') }}>+ Criar formulário</Button></div>}
           <Menu
             mode="inline"
             style={{ flex: 1 }}
@@ -448,7 +465,7 @@ export const AdminStructure: FunctionComponent<Props> = (props) => {
             openKeys={open}
             onOpenChange={(open): void => setOpen(open)}
           >
-            {buildMenu(sideMenu)}
+            {shouldShowMenu ? buildMenu(sideMenu) : null}
           </Menu>
 
           <LanguageSelector>

@@ -48,6 +48,9 @@ export class UserEntity {
   @Column({ nullable: true })
   public apiKey?: string
 
+  @Column('boolean', { default: false })
+  public onboardingCompleted = false
+
   @CreateDateColumn()
   public created: Date
 
