@@ -1,7 +1,5 @@
-import { Button, Form, Input, message, Tabs } from 'antd'
-import { cleanInput } from 'components/clean.input'
 import { BaseDataTab } from 'components/form/admin/base.data.tab'
-import Structure from 'components/structure'
+import { AdminStructure } from 'components/admin/structure'
 import { withAuth } from 'components/with.auth'
 import { FormFragment } from 'graphql/fragment/form.fragment'
 import { useFormCreateMutation } from 'graphql/mutation/form.create.mutation'
@@ -9,6 +7,67 @@ import { NextPage } from 'next'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import styled from 'styled-components'
+import { Button, Input, ToastProvider, useToast } from 'src/components/primitives'
+import { Form } from 'antd'
+import { useForm } from 'antd/lib/form/Form'
+import { cleanInput } from 'components/clean.input'
+
+const CreateContainer = styled.div`
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 32px 24px;
+  position: relative;
+`
+
+const HeaderBar = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+  gap: 16px;
+`
+
+const HeaderTitle = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 12px;
+`
+
+const HeaderIcon = styled.div`
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.35);
+`
+
+const HeaderTitleText = styled.div`
+  h2 {
+    font-size: 22px;
+    font-weight: 900;
+    color: #0f172a;
+    margin: 0 0 4px;
+  }
+  span {
+    font-size: 13px;
+    color: #64748b;
+  }
+`
+
+const FormCard = styled.div`
+  background: #fff;
+  border-radius: 16px;
+  border: 1px solid var(--omf-border);
+  box-shadow: var(--omf-shadow-sm);
+  padding: 32px;
+`
 
 interface FormData {
   form: FormFragment
@@ -17,9 +76,10 @@ interface FormData {
 const Create: NextPage = () => {
   const { t } = useTranslation()
   const router = useRouter()
-  const [form] = Form.useForm<FormData>()
+  const [form] = useForm<FormData>()
   const [saving, setSaving] = useState(false)
   const [create] = useFormCreateMutation()
+  const { addToast } = useToast()
 
   const save = async (formData: FormData) => {
     setSaving(true)
@@ -31,100 +91,111 @@ const Create: NextPage = () => {
         })
       ).data
 
-      await message.success(t('form:created'))
+      addToast({ type: 'success', title: t('form:created') })
 
       await router.replace('/admin/forms/[id]', `/admin/forms/${next.form.id}`)
     } catch (e) {
       console.error('failed to save', e)
-      await message.error(t('form:creationError'))
+      addToast({ type: 'error', title: t('form:creationError') })
     }
 
     setSaving(false)
   }
 
   return (
-    <Structure
-      loading={saving}
-      title={t('form:create')}
-      selected={'forms'}
-      breadcrumbs={[
-        { href: '/admin', name: t('admin:home') },
-        { href: '/admin/forms', name: t('admin:forms') },
-      ]}
-      extra={[
-        <Button key={'create'} onClick={form.submit} type={'primary'}>
-          {t('form:createNow')}
-        </Button>,
-      ]}
-      style={{ paddingTop: 0 }}
-    >
-      <Form
-        form={form}
-        onFinish={save}
-        onFinishFailed={async () => {
-          // TODO process errors
-          await message.error(t('validation:mandatoryFieldsMissing'))
-        }}
-        labelCol={{
-          xs: { span: 24 },
-          sm: { span: 6 },
-        }}
-        wrapperCol={{
-          xs: { span: 24 },
-          sm: { span: 18 },
-        }}
-      >
-        <Form.Item noStyle name={['form', 'id']}>
-          <Input type={'hidden'} />
-        </Form.Item>
+    <ToastProvider>
+      <CreateContainer>
+        <HeaderBar>
+          <HeaderTitle>
+            <HeaderIcon>+</HeaderIcon>
+            <HeaderTitleText>
+              <h2>{t('form:create')}</h2>
+              <span>Crie um novo formulário em poucos cliques.</span>
+            </HeaderTitleText>
+          </HeaderTitle>
+          <Button key={'create'} onClick={() => form.submit()} variant="primary" disabled={saving} loading={saving}>
+            {t('form:createNow')}
+          </Button>
+        </HeaderBar>
+        <FormCard>
+          <AdminStructure
+            loading={saving}
+            title={t('form:create')}
+            selected={'forms'}
+            breadcrumbs={[
+              { href: '/admin', name: t('admin:home') },
+              { href: '/admin/forms', name: t('admin:forms') },
+            ]}
+            extra={[]}
+            style={{ paddingTop: 0 }}
+          >
+            <Form
+              form={form}
+              onFinish={save}
+              onFinishFailed={() => {
+                addToast({ type: 'error', title: t('validation:mandatoryFieldsMissing') })
+              }}
+              labelCol={{
+                xs: { span: 24 },
+                sm: { span: 6 },
+              }}
+              wrapperCol={{
+                xs: { span: 24 },
+                sm: { span: 18 },
+              }}
+            >
+              <Form.Item noStyle name={['form', 'id']}>
+                <Input type="hidden" />
+              </Form.Item>
 
-        <Form.Item
-          noStyle
-          name={[
-            'form',
-            'layout',
-          ]}
-          initialValue={'card'}
-        >
-          <Input type={'hidden'} />
-        </Form.Item>
+              <Form.Item
+                noStyle
+                name={[
+                  'form',
+                  'layout',
+                ]}
+                initialValue={'card'}
+              >
+                <Input type="hidden" />
+              </Form.Item>
 
-        <Form.Item
-          noStyle
-          name={[
-            'form', 'endPage', 'show',
-          ]}
-          initialValue={true}
-        >
-          <Input type={'hidden'} />
-        </Form.Item>
+              <Form.Item
+                noStyle
+                name={[
+                  'form', 'endPage', 'show',
+                ]}
+                initialValue={true}
+              >
+                <Input type="hidden" />
+              </Form.Item>
 
-        <Form.Item
-          noStyle
-          name={[
-            'form', 'endPage', 'title',
-          ]}
-          initialValue={t('form:submitted')}
-        >
-          <Input type={'hidden'} />
-        </Form.Item>
+              <Form.Item
+                noStyle
+                name={[
+                  'form', 'endPage', 'title',
+                ]}
+                initialValue={t('form:submitted')}
+              >
+                <Input type="hidden" />
+              </Form.Item>
 
-        <Form.Item
-          noStyle
-          label={t('form:endPage.continueButtonText')}
-          name={[
-            'form', 'endPage', 'buttonText',
-          ]}
-          initialValue={t('form:restart')}
-        >
-          <Input type={'hidden'} />
-        </Form.Item>
+              <Form.Item
+                noStyle
+                label={t('form:endPage.continueButtonText')}
+                name={[
+                  'form', 'endPage', 'buttonText',
+                ]}
+                initialValue={t('form:restart')}
+              >
+                <Input type="hidden" />
+              </Form.Item>
 
-        <Tabs>
-          <BaseDataTab key={'base_data'} tab={t('form:baseDataTab')} />
-        </Tabs>
-      </Form>
-    </Structure>
+              <BaseDataTab />
+            </Form>
+          </AdminStructure>
+        </FormCard>
+      </CreateContainer>
+    </ToastProvider>
   )
 }
 

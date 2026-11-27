@@ -12,6 +12,13 @@ interface Props extends ButtonProps {
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-call,@typescript-eslint/no-unsafe-assignment
 const Styled = styled(Button)`
+  border-radius: 10px;
+  min-height: 44px;
+  height: auto;
+  padding: 10px 22px;
+  font-weight: 600;
+  white-space: normal;
+  transition: background-color 160ms ease, transform 160ms ease;
   background: ${(props: Props) => props.background};
   color: ${(props: Props) => props.color};
   border-color: ${(props: Props) => darken(0.1, props.background)};

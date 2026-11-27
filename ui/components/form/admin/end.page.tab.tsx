@@ -1,9 +1,11 @@
 import { DeleteOutlined, PlusOutlined } from '@ant-design/icons/lib'
-import { Button, Card, Form, Input, Switch, Tabs } from 'antd'
+import { Form, Tabs } from 'antd'
 import { TabPaneProps } from 'antd/lib/tabs'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { InputColor } from '../../input/color'
+import { Button, Input, Switch } from 'src/components/primitives'
+import { Card, Input as AntdInput } from 'antd'
 
 export const EndPageTab: React.FC<TabPaneProps> = (props) => {
   const { t } = useTranslation()
@@ -33,7 +35,7 @@ export const EndPageTab: React.FC<TabPaneProps> = (props) => {
         ]}
         extra={t('type:descriptionInfo')}
       >
-        <Input.TextArea autoSize />
+        <AntdInput.TextArea autoSize />
       </Form.Item>
 
       <Form.Item
@@ -112,7 +114,7 @@ export const EndPageTab: React.FC<TabPaneProps> = (props) => {
                 }}
               >
                 <Button
-                  type="dashed"
+                  variant="dashed"
                   onClick={() => {
                     add()
                   }}

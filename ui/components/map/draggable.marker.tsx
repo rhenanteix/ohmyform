@@ -27,7 +27,7 @@ export const DraggableMarker: FC<Props> = (props) => {
       position={props.value}
       ref={markerRef}
       icon={L.icon({
-        iconUrl: require('assets/images/marker-icon-2x.png'),
+        iconUrl: '/images/marker-icon-2x.png',
         iconSize: [50/2, 82/2],
         iconAnchor: [50 / 4, 82/2],
       })}

@@ -1,0 +1,150 @@
+{
+  "seo": {
+    "title": "OhMyForm — Simple forms. Real connections.",
+    "description": "Create forms with personality. Customize your questions, share them and collect responses in one place."
+  },
+  "nav": {
+    "features": "Features",
+    "custom": "Customization",
+    "faq": "FAQ",
+    "login": "Log in",
+    "cta": "Create a form",
+    "menu": "Open menu",
+    "skip": "Skip to content",
+    "navigation": "Main navigation"
+  },
+  "hero": {
+    "eyebrow": "SMALL QUESTIONS. BIG POSSIBILITIES.",
+    "title": "Simple forms.",
+    "highlight": "Real connections.",
+    "subtitle": "Say goodbye to dull forms. Turn your questions into a thoughtful, beautiful experience with a personality of its own.",
+    "cta": "Create my form",
+    "micro": "No coding needed · Open source",
+    "try": "Go ahead. Try the demo :)",
+    "demoLabel": "LET’S GET TO KNOW YOU",
+    "demoTitle": "What brings you here?",
+    "demoBody": "Every good idea starts with a conversation.",
+    "option1": "I want to hear from customers",
+    "option2": "I have an exciting idea",
+    "option3": "I’m just exploring",
+    "selected": "Great choice! Let’s create something together.",
+    "hint": "Choose an option to try it out."
+  },
+  "social": {
+    "title": "For curious people with good questions.",
+    "simple": "Simple to create",
+    "human": "Made for people",
+    "open": "Open by nature"
+  },
+  "features": {
+    "eyebrow": "LESS FRICTION, MORE POSSIBILITIES",
+    "title": "Simple to use.",
+    "highlight": "Plenty to discover.",
+    "subtitle": "Everything you need to bring an idea to life and understand the people behind the answers.",
+    "item1": {
+      "title": "From idea to form",
+      "desc": "Add questions and arrange your flow. Create surveys, registrations and polls without writing code."
+    },
+    "item2": {
+      "title": "A look that is yours",
+      "desc": "Customize colors and messages. Make your forms feel like a natural part of your brand."
+    },
+    "item3": {
+      "title": "Open to possibilities",
+      "desc": "Open source for people who value freedom. Explore, contribute and host your own instance."
+    },
+    "item4": {
+      "title": "Every screen matters",
+      "desc": "A thoughtful experience that follows your audience from desktop to tablet to phone."
+    },
+    "item5": {
+      "title": "Ready to share",
+      "desc": "Publish and share the link with the people you want to hear from."
+    },
+    "item6": {
+      "title": "Every answer counts",
+      "desc": "Collect responses in your dashboard and find the information that helps you take the next step."
+    }
+  },
+  "custom": {
+    "eyebrow": "A LITTLE BIT OF YOUR PERSONALITY",
+    "title": "Your form.",
+    "highlight": "Your own way.",
+    "body": "Give your questions the personality of your brand. Play with colors, personalize the words and make every detail count.",
+    "b1": "Colors that match your identity",
+    "b2": "Questions and messages in your voice",
+    "b3": "A thoughtful experience on every screen",
+    "previewTitle": "How was your experience?",
+    "previewBody": "Your opinion makes a difference.",
+    "rating": "Rating",
+    "palette": "Demo color",
+    "paletteHint": "Pick a color. Watch your idea come alive.",
+    "lavender": "Lavender",
+    "rose": "Rose",
+    "sage": "Sage",
+    "sun": "Soft yellow"
+  },
+  "usecases": {
+    "eyebrow": "MADE FOR YOUR IDEAS",
+    "title": "Have a question? There’s a form for that.",
+    "subtitle": "From your next event to the feedback that shapes your product.",
+    "cat1": {
+      "title": "Marketing",
+      "b1": "Lead capture",
+      "b2": "Market research",
+      "b3": "Campaign feedback"
+    },
+    "cat2": {
+      "title": "People & culture",
+      "b1": "Team onboarding",
+      "b2": "Employee surveys",
+      "b3": "Internal feedback"
+    },
+    "cat3": {
+      "title": "Education",
+      "b1": "Student registration",
+      "b2": "Course evaluations",
+      "b3": "Questionnaires"
+    },
+    "cat4": {
+      "title": "Research",
+      "b1": "Interviews and studies",
+      "b2": "Information collection",
+      "b3": "Opinion surveys"
+    },
+    "cat5": {
+      "title": "Events",
+      "b1": "RSVPs",
+      "b2": "Event registration",
+      "b3": "Post-event feedback"
+    },
+    "cat6": {
+      "title": "Product",
+      "b1": "Feature suggestions",
+      "b2": "Satisfaction surveys",
+      "b3": "Beta registrations"
+    }
+  },
+  "final": {
+    "title": "Your next great idea starts with a question.",
+    "cta": "Let’s create together",
+    "micro": "Easy to start. Full of possibilities."
+  },
+  "faq": {
+    "title": "A few questions of your own?",
+    "q1": "Do I need to know how to code?",
+    "a1": "No. Use the editor to create and organize questions, customize the design and publish your form.",
+    "q2": "Can I customize my form?",
+    "a2": "Yes. Adjust colors, text and welcome and completion pages to create an experience that reflects your identity.",
+    "q3": "How do I share forms and see responses?",
+    "a3": "Publish your form and share its link. Responses are available in your dashboard.",
+    "q4": "Is OhMyForm open source?",
+    "a4": "Yes. Explore the code on GitHub or host your own instance following the documentation and license terms."
+  },
+  "footer": {
+    "tagline": "Good questions bring people together.",
+    "product": "Explore",
+    "login": "Access my account",
+    "copy": "OhMyForm · Made for good conversations."
+  }
+}

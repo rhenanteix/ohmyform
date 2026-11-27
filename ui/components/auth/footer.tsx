@@ -1,5 +1,4 @@
 import { Button, Select } from 'antd'
-import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React from 'react'
 import GitHubButton from 'react-github-button'
@@ -31,70 +30,76 @@ const AuthFooterInner: React.FC<Props> = (props) => {
     <footer className={scss.footer}>
       {props.me
         ? [
-          <span style={{ color: '#FFF' }} key={'user'}>
+            <span style={{ color: '#FFF' }} key={'user'}>
               Hi, {props.me.username}
-          </span>,
-          props.me.roles.includes('admin') && (
-            <Link key={'admin'} href={'/admin'}>
+            </span>,
+            props.me.roles.includes('admin') && (
+              <a key={'admin'} href={'/admin'}>
+                <Button
+                  type={'link'}
+                  style={{
+                    color: '#FFF',
+                  }}
+                >
+                  {t('admin')}
+                </Button>
+              </a>
+            ),
+            <a key={'profile'} href={'/admin/profile'}>
               <Button
                 type={'link'}
                 style={{
                   color: '#FFF',
                 }}
               >
-                {t('admin')}
+                {t('profile')}
               </Button>
-            </Link>
-          ),
-          <Link key={'profile'} href={'/admin/profile'}>
+            </a>,
             <Button
+              key={'logout'}
               type={'link'}
+              onClick={logout}
               style={{
                 color: '#FFF',
               }}
             >
-              {t('profile')}
-            </Button>
-          </Link>,
-          <Button
-            key={'logout'}
-            type={'link'}
-            onClick={logout}
-            style={{
-              color: '#FFF',
-            }}
-          >
-            {t('logout')}
-          </Button>,
-        ]
+              {t('logout')}
+            </Button>,
+          ]
         : [
-          <Link href={'/login'} key={'login'}>
-            <Button
-              type={'link'}
-              style={{
-                color: '#FFF',
-              }}
-            >
-              {t('login')}
-            </Button>
-          </Link>,
-          !loading && !data?.disabledSignUp.value && (
-            <Link href={'/register'} key={'register'}>
+            <a href={'/login'} key={'login'}>
               <Button
                 type={'link'}
                 style={{
                   color: '#FFF',
                 }}
               >
-                {t('register')}
+                {t('login')}
               </Button>
-            </Link>
-          ),
-        ]}
+            </a>,
+            !loading && !data?.disabledSignUp.value && (
+              <a href={'/register'} key={'register'}>
+                <Button
+                  type={'link'}
+                  style={{
+                    color: '#FFF',
+                  }}
+                >
+                  {t('register')}
+                </Button>
+              </a>
+            ),
+          ]}
       <div style={{ flex: 1 }} />
       <Select
         bordered={false}
-        value={i18n.language.replace(/-.*/, '')}
+        value={
+          i18n.language.startsWith('pt')
+            ? i18n.language.includes('PT')
+              ? 'pt_PT'
+              : 'pt_BR'
+            : i18n.language.replace(/-.*/, '')
+        }
         onChange={(next) => i18n.changeLanguage(next)}
         style={{
           color: '#FFF',

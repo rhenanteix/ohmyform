@@ -1,8 +1,9 @@
-import { Form, Input, Select, Tabs } from 'antd'
+import { Form, Tabs } from 'antd'
 import { TabPaneProps } from 'antd/lib/tabs'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { InputColor } from '../../input/color'
+import { Input, Select } from 'src/components/primitives'
 
 export const DesignTab: React.FC<TabPaneProps> = (props) => {
   const { t } = useTranslation()

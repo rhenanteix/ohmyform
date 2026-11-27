@@ -5,6 +5,7 @@ interface Data {
   me: {
     id: string
     username: string
+    email: string
     roles: string[]
   }
 }
@@ -13,6 +14,7 @@ const QUERY = gql`
   query me {
     me {
       id
+      email
       roles
       username
     }

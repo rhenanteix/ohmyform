@@ -1,5 +1,5 @@
 import { PlusOutlined } from '@ant-design/icons/lib'
-import { Button, Form, Select, Space, Tabs } from 'antd'
+import { Form, Space, Tabs } from 'antd'
 import { FormInstance } from 'antd/lib/form'
 import { TabPaneProps } from 'antd/lib/tabs'
 import debug from 'debug'
@@ -9,6 +9,7 @@ import { useTranslation } from 'react-i18next'
 import { FormFieldFragment } from '../../../graphql/fragment/form.fragment'
 import { fieldTypes } from '../types'
 import { FieldCard } from './field.card'
+import { Button, Select } from 'src/components/primitives'
 
 const logger = debug('FieldsTab')
 
@@ -55,20 +56,23 @@ export const FieldsTab: React.FC<Props> = (props) => {
       return (
         <Form.Item wrapperCol={{ span: 24 }}>
           <Space
+            wrap
             style={{
               width: '100%',
               justifyContent: 'flex-end',
             }}
           >
-            <Select value={nextType} onChange={(e) => setNextType(e)} style={{ minWidth: 200 }}>
-              {Object.keys(fieldTypes).map((type) => (
-                <Select.Option value={type} key={type}>
-                  {t(`type:${type}.name`)}
-                </Select.Option>
-              ))}
-            </Select>
+            <Select
+              value={nextType}
+              onChange={(e) => setNextType(e.target.value)}
+              style={{ minWidth: 200 }}
+              options={Object.keys(fieldTypes).map((type) => ({
+                value: type,
+                label: t(`type:${type}.name`),
+              }))}
+            />
             <Button
-              type="dashed"
+              variant="dashed"
               onClick={() => {
                 const defaults: FormFieldFragment = {
                   logic: [],
@@ -122,3 +126,4 @@ export const FieldsTab: React.FC<Props> = (props) => {
     </Tabs.TabPane>
   )
 }
+

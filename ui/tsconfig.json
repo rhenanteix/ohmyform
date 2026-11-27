@@ -18,7 +18,14 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
-    "incremental": true
+    "incremental": true,
+    "paths": {
+      "@/*": ["./src/*"],
+      "components/*": ["./components/*"],
+      "assets/*": ["./assets/*"],
+      "graphql/*": ["./graphql/*"],
+      "store/*": ["./store/*"]
+    }
   },
   "exclude": [
     "node_modules",
@@ -28,6 +35,8 @@
   "include": [
     "next-env.d.ts",
     "**/*.ts",
-    "**/*.tsx"
+    "**/*.tsx",
+    "src/**/*.ts",
+    "src/**/*.tsx"
   ]
 }

@@ -17,7 +17,10 @@ const Recover: NextPage = () => {
           textAlign: 'center',
         }}
         type={'warning'}
-        message={'Work in Progress'}
+        message={'Recuperação de acesso'}
+        description={
+          'A recuperação automática de senha ainda não está disponível. Entre em contato com o administrador da plataforma para recuperar seu acesso.'
+        }
       />
 
       <AuthFooter />

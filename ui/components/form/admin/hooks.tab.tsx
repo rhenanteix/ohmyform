@@ -1,8 +1,10 @@
 import { DeleteOutlined, PlusOutlined } from '@ant-design/icons/lib'
-import { Button, Card, Checkbox, Form, Input, Popconfirm, Space, Tabs } from 'antd'
+import { Button as AntdButton, Form, Popconfirm, Space, Tabs } from 'antd'
 import { TabPaneProps } from 'antd/lib/tabs'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
+import { Checkbox, Input } from 'src/components/primitives'
+import { Card } from 'antd'
 
 interface Props extends TabPaneProps {}
 
@@ -22,7 +24,7 @@ export const HooksTab: React.FC<Props> = (props) => {
                     justifyContent: 'flex-end',
                   }}
                 >
-                  <Button
+                  <AntdButton
                     type="dashed"
                     onClick={() => {
                       const defaults = {
@@ -35,7 +37,7 @@ export const HooksTab: React.FC<Props> = (props) => {
                     }}
                   >
                     <PlusOutlined /> {t('form:hooks.add')}
-                  </Button>
+                  </AntdButton>
                 </Space>
               </Form.Item>
               {hooks.map((hook, index) => (
@@ -66,9 +68,9 @@ export const HooksTab: React.FC<Props> = (props) => {
                               remove(index)
                             }}
                           >
-                            <Button danger>
+                            <AntdButton>
                               <DeleteOutlined />
-                            </Button>
+                            </AntdButton>
                           </Popconfirm>
                         </div>
                       }

@@ -15,7 +15,7 @@ void (async () => {
     disableErrorMessages: false,
     transform: true,
   }))
-  app.enableCors({origin: '*'})
+  app.enableCors({origin: process.env.FRONTEND_URL || '*'})
   app.getHttpAdapter().options('*', cors())
 
   await app.listen(process.env.PORT || 4100);
